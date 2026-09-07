@@ -12,6 +12,8 @@
 
 **目标期刊：Electronic Journal of Combinatorics（E‑JC）**。理由与投稿前必须完成的事项见第 7 节。
 
+代码与证书仓库：https://github.com/Chth1z/math-erdos1-dissociated-sets （作者：Zhiyu Liu，Tianjin Medical University General Hospital, Tianjin Medical University）。
+
 ---
 
 ## 1. 问题与背景
@@ -128,7 +130,7 @@ tools/        抓取/汇总脚本，tectonic 可执行文件
 **投稿前必须由作者本人完成：**
 1. 逐行核对论文中的每个证明（尤其 Thm. 17 指标公式、Prop. 18 坏素数分类、Thm. 25 的归纳、新增的 Lemma 22 / Cor. 23 / Cor. 30），并重跑 `experiments/` 复现所有数字；最好用另一套系统（PARI/GP 或 Magma）独立复算一个证书。
 2. 参考文献的卷期页码与 DOI 已于 2026‑09‑06 经 Crossref API 核对（14 条，见 `paper_rewriting_output/citation_support_bank.md`）；投稿前再确认 Bloom 页面是否已有稳定版本（arXiv）。
-3. 占位符：作者、单位、邮箱与致谢中的 AI 使用声明已填（2026‑09‑07）；仍需填写代码仓库 URL（建议 GitHub + Zenodo DOI）；`\dateline` 由投稿/录用日期决定。致谢中"the author has checked all proofs and computations"一句必须在投稿前成为事实（见第 1 条）。
+3. 占位符：作者、单位、邮箱、致谢中的 AI 使用声明与代码仓库 URL 均已填（2026‑09‑07）；`\dateline` 由投稿/录用日期决定。建议投稿时用 Zenodo 为仓库打一个 DOI 并加进致谢。致谢中"the author has checked all proofs and computations"一句必须在投稿前成为事实（见第 1 条）。
 4. 先挂 arXiv（E‑JC 允许），并检索是否已有他人发布有效化版本——这是两天前的热点结果，撞车风险真实存在。
 5. E‑JC 初投只需 PDF；录用后上传单一 `.tex` 源文件（已满足：单文件、无 overfull hbox）。
 
