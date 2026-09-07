@@ -45,7 +45,8 @@ the trivial bound $\max A\le2^{|A|-1}$ came from an explicit construction: Conwa
 Lunnon (1988) $0.22096\cdot2^{|A|}$, and Bohman (1998) $0.22002\cdot2^{|A|}$, in each case for all sufficiently large $|A|$.
 In September 2026 the conjecture was disproved by an iterated lattice construction (GPT-6 Astra, expounded by Bloom):
 for every $\varepsilon>0$ there are arbitrarily large $n$ and dissociated $A$ with $|A|=n$ and $\max A<\varepsilon2^n$.
-That proof is non-effective, because it approximates a lattice of rank $d-1$ by a primitive one through a density argument.
+That argument is not effective as written: the passage from a lattice of rank $d-1$ to a primitive one goes through an
+equidistribution statement and extracts no lattice, constant or size $n$.
 
 We make the construction explicit. We describe the lattices in closed form inside
 $\Z[x_1,\dots,x_s]/(x_1^b-1,\dots,x_s^b-1)$, and we prove that adding suitable unit vectors to a basis of the scaled
@@ -62,7 +63,7 @@ $\limsup_{l\to\infty}f(l\,b^s)\le(1+2^{-b})^{(b^s-1)/(b-1)}(2/3)^s$, where $f(n)
 over dissociated sets of size $n$.
 We give computer-certified explicit dissociated sets, for instance one with $|A|=43\,923$ and
 $\max A<0.15853\cdot2^{|A|}$ and one with $|A|=3\,841\,966$ and $\max A<0.10304\cdot2^{|A|}$; these are the first
-explicit sets below Bohman's constant. Since $f$ is nonincreasing (double every element and adjoin an odd number), each
+explicit sets below Bohman's constant. Since $f$ is nonincreasing (double every element and adjoin $1$), each
 of these bounds persists for every larger size, so that for instance $f(n)\le0.206072$ for all $n\ge3\,841\,966$.
 Under the coprimality conjecture the method yields $f(n)\le n^{-c/\log\log n}$ for all sufficiently large $n$.
 Finally we show that the exponent of decay is governed by the heights of admissible pairs of lattices.
@@ -95,8 +96,10 @@ Lean (see \cite{EP1}); we follow the exposition of Bloom \cite{EP1}, whose notat
 lattices $\Lat_s\subset V_d=\{x\in\R^d:\sum_ix_i=0\}$, $d=b^s$, which avoid the open unit cube and have small covolume.
 The second is the passage from $\Lat_s$ to an integer vector with dissociated coordinates: one needs a \emph{primitive}
 lattice $L=u^\perp\cap\Z^d$ close to $Q\Lat_s$, and its existence was derived from the equidistribution of primitive
-lattices in the space of lattices \cite{HoKa23}, which is non-effective. Bloom remarks that an effective version ``could
-prove something like $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$''. We note in passing that, combined with the
+lattices in the space of lattices \cite{HoKa23}. Equidistribution theorems of this kind do come with explicit error terms,
+but the exposition uses the statement qualitatively: no lattice, constant or size $n$ is extracted, and the uniformity in
+the dimension that a rate would require is not addressed. Bloom remarks that an effective version ``could prove something
+like $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$''. We note in passing that, combined with the
 classical monotonicity of $f$ (Lemma~\ref{lem:mono}), the disproof gives $f(n)\to0$ along all $n$; what it does not
 provide is a single explicit set, an explicit size $n$, or an explicit rate.
 
@@ -236,7 +239,8 @@ Following \cite{EP1}, a pair $(\Lat,v)$ with $\Lat\subset V_d$ a lattice of rank
 \item $\Lat\cap\dcube1^d=\{0\}$;
 \item $tv\in\Lat+\dcube1^d$ with $t\in\R$ implies $|t|<1$.
 \end{enumerate}
-Its \emph{height} is $h=\langle v,\one_d\rangle$, and $\Gamma=\Lat\oplus\Z v$ satisfies
+Both conditions are invariant under $v\mapsto-v$; replacing $v$ by $-v$ if necessary, we always orient an admissible pair so
+that its \emph{height} $h=\langle v,\one_d\rangle$ is positive. Then $\Gamma=\Lat\oplus\Z v$ satisfies
 $\covol(\Gamma)=\covol(\Lat)\,h/\sqrt d$. We write $\Delta=\covol(\Lat)/\sqrt d=\covol(\Gamma)/h$.
 Conditions (A1)--(A2) imply $\Gamma\cap\dcube1^d=\{0\}$, hence $\covol(\Gamma)\ge1$ by Minkowski's theorem, so
 $\Delta\ge1/h$.
@@ -322,9 +326,11 @@ If $Q>K$ then the $\ell_j$ are linearly independent and $L\cap\dcube{Q-K}^d=\{0\
 is primitive with normal vector $u$, the coordinates of $u$ are $(Q-K)$-dissociated.
 \end{lemma}
 \begin{proof}
-Let $x=\sum_jm_j\ell_j=Q\lambda+\sum_jm_je_{r_j}$ with $\lambda=\sum_jm_jb_j$. If $\lambda=0$ then all $m_j=0$ and $x=0$.
-Otherwise $|\lambda|_\infty\ge1$ by (A1), and by \eqref{eq:coeff}
-$|x|_\infty\ge Q|\lambda|_\infty-\sum_j|m_j|\ge(Q-K)|\lambda|_\infty\ge Q-K>0$.
+Let $m\in\R^{d-1}$, $x=\sum_jm_j\ell_j=Q\lambda+\sum_jm_je_{r_j}$ with $\lambda=\sum_jm_jb_j$. Since $m_j=\langle\lambda,b_j^*\rangle$,
+the bound \eqref{eq:coeff} holds for real $m$ as well, so if $m\ne0$ then $\lambda\ne0$ (the $b_j$ are a basis) and
+$|x|_\infty\ge Q|\lambda|_\infty-\sum_j|m_j|\ge(Q-K)|\lambda|_\infty>0$; hence the $\ell_j$ are linearly independent over $\R$.
+If moreover $m\in\Z^{d-1}\setminus\{0\}$, then $\lambda\in\Lat\setminus\{0\}$, so $|\lambda|_\infty\ge1$ by (A1) and
+$|x|_\infty\ge Q-K$.
 \end{proof}
 
 \begin{lemma}[shape of the normal vector]\label{lem:shape}
@@ -408,7 +414,7 @@ $L_s(Q,\rho)=\rho\cdot\operatorname{span}\{(Q/\rho)\beta_{k,i,m}+\mu_{k,i,m}\}$ 
 scale $Q/\rho$.
 
 \begin{definition}[level data]\label{def:levels}
-Set $\theta_1=Q/2$ and $\rho_1=\rho$. For $k\ge1$, provided $\theta_k,\rho_k>0$, put
+Set $\theta_1=Q/2$ and $\rho_1=\rho$. For $1\le k\le s$, provided $\theta_k,\rho_k>0$, put
 \begin{gather*}
 \varphi_k=\theta_k\gpoly+\rho_k\in R_b,\qquad \Nm_k=\Nm(\varphi_k),\qquad
 \psi_k=\adj(\overline{\varphi_k})\quad(\text{so }\psi_k\overline{\varphi_k}=\Nm_k),\\
@@ -416,10 +422,10 @@ Set $\theta_1=Q/2$ and $\rho_1=\rho$. For $k\ge1$, provided $\theta_k,\rho_k>0$,
 (\varepsilon_k\in\{\pm1\}\text{ with }\langle\tilde u_k,\one_b\rangle>0),\\
 a_k=\langle\tilde u_k,x^{b-1}\rangle=\varepsilon_k\psi_{k,0}/\gamma_k,\qquad
 c_k=\langle\tilde u_k,2+x\rangle=2\tilde u_{k,0}+\tilde u_{k,1},\\
-\theta_{k+1}=\frac{Q}{2^{k+1}}\,c_1\cdots c_k,\qquad \rho_{k+1}=\rho\,a_1\cdots a_k ,
+\theta_{k+1}=\frac{Q}{2^{k+1}}\,c_1\cdots c_k,\qquad \rho_{k+1}=\rho\,a_1\cdots a_k\qquad(k<s),
 \end{gather*}
 where $\tilde u_{k,i}$ and $\psi_{k,i}$ denote the coefficients of $x^i$; thus $\tilde u_{k,i}=\varepsilon_k\psi_{k,i+1}/\gamma_k$
-with indices mod $b$.
+with indices mod $b$. (Since $2^s\mid Q$, the $\theta_k$ are integers for $k\le s$; the recursion is not continued beyond $k=s$.)
 \end{definition}
 
 \begin{lemma}[non-degeneracy]\label{lem:nondeg}
