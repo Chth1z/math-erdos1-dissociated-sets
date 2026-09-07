@@ -90,8 +90,8 @@ record $\sqrt{2/\pi}$ being due to Elkies and Gleason (unpublished) and to Dubro
 $N\ge\binom{n}{\lfloor n/2\rfloor}$.
 
 In September 2026 the conjecture was \emph{disproved}: for every $\varepsilon>0$ there are arbitrarily large $n$ with
-$f(n)<\varepsilon$. The construction is due to the AI system GPT-6 Astra; we follow the exposition of Bloom
-\cite{EP1}, whose notation we adopt. The proof has two parts. The first is an elementary iterative construction of
+$f(n)<\varepsilon$. The construction is due to the AI system GPT-6 Astra, and the disproof has been formally verified in
+Lean (see \cite{EP1}); we follow the exposition of Bloom \cite{EP1}, whose notation we adopt. The proof has two parts. The first is an elementary iterative construction of
 lattices $\Lat_s\subset V_d=\{x\in\R^d:\sum_ix_i=0\}$, $d=b^s$, which avoid the open unit cube and have small covolume.
 The second is the passage from $\Lat_s$ to an integer vector with dissociated coordinates: one needs a \emph{primitive}
 lattice $L=u^\perp\cap\Z^d$ close to $Q\Lat_s$, and its existence was derived from the equidistribution of primitive
@@ -904,7 +904,7 @@ The code and certificate data are available at \url{https://github.com/Chth1z/ma
 
 \begin{thebibliography}{99}
 \bibitem{Al08} I.~Aliev. Siegel's lemma and sum-distinct sets. \emph{Discrete Comput.\ Geom.}, 39: 59--66, 2008. \doi{10.1007/s00454-008-9059-9}
-\bibitem{EP1} T.~F.~Bloom. Erd\H{o}s Problem \#1, \url{https://www.erdosproblems.com/1}; includes the proof exposition of the construction of GPT-6 Astra (last edited 3 September 2026). Accessed 4 September 2026.
+\bibitem{EP1} T.~F.~Bloom. Erd\H{o}s Problem \#1, \url{https://www.erdosproblems.com/1}; includes the proof exposition of the construction of GPT-6 Astra (last edited 3 September 2026; status ``disproved, proof verified in Lean''). Accessed 7 September 2026.
 \bibitem{Bo96} T.~Bohman. A sum packing problem of Erd\H{o}s and the Conway--Guy sequence. \emph{Proc.\ Amer.\ Math.\ Soc.}, 124: 3627--3636, 1996. \doi{10.1090/S0002-9939-96-03653-2}
 \bibitem{Bo98} T.~Bohman. A construction for sets of integers with distinct subset sums. \emph{Electron.\ J.\ Combin.}, 5: Research Paper 3, 1998. \doi{10.37236/1341}
 \bibitem{BoVa83} E.~Bombieri and J.~Vaaler. On Siegel's lemma. \emph{Invent.\ Math.}, 73: 11--32, 1983. \doi{10.1007/BF01393823}
