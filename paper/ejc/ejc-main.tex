@@ -1,0 +1,922 @@
+% Electronic Journal of Combinatorics format.
+\documentclass[12pt]{article}
+\usepackage[amsmath]{e-jc}
+
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\dateline{TBD}{TBD}{TBD}
+\MSC{11B75, 11H06, 11H31, 11Y16}
+\Copyright{The author. Released under the CC BY license (International 4.0).}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\covol}{\operatorname{covol}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\cont}{\operatorname{cont}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\sat}{\operatorname{sat}}
+\newcommand{\Nm}{\mathrm{N}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\dcube}[1]{(-#1,#1)}
+\newcommand{\Lat}{\Lambda}
+\newcommand{\gpoly}{g}
+
+\title{Explicit dissociated sets from tensor lattices:\\ an effective form of the disproof of\\ Erd\H{o}s's distinct subset sums conjecture}
+
+\author{Zhiyu Liu}
+\authortext{}{Tianjin Medical University General Hospital, Tianjin Medical University, Tianjin, China (\email{07eb1f@gmail.com}).}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A finite set $A$ of positive integers is \emph{dissociated} if its $2^{|A|}$ subset sums are pairwise distinct.
+Erd\H{o}s conjectured in 1931 that $\max A\ge c\,2^{|A|}$ for an absolute constant $c>0$. Until 2026, every improvement of
+the trivial bound $\max A\le2^{|A|-1}$ came from an explicit construction: Conway and Guy (1968) reached $\max A<0.23513\cdot2^{|A|}$,
+Lunnon (1988) $0.22096\cdot2^{|A|}$, and Bohman (1998) $0.22002\cdot2^{|A|}$, in each case for all sufficiently large $|A|$.
+In September 2026 the conjecture was disproved by an iterated lattice construction (GPT-6 Astra, expounded by Bloom):
+for every $\varepsilon>0$ there are arbitrarily large $n$ and dissociated $A$ with $|A|=n$ and $\max A<\varepsilon2^n$.
+That proof is non-effective, because it approximates a lattice of rank $d-1$ by a primitive one through a density argument.
+
+We make the construction explicit. We describe the lattices in closed form inside
+$\Z[x_1,\dots,x_s]/(x_1^b-1,\dots,x_s^b-1)$, and we prove that adding suitable unit vectors to a basis of the scaled
+lattice produces an integer lattice whose normal vector is a tensor product $\tilde u_1\otimes\dots\otimes\tilde u_s$ of
+explicit vectors $\tilde u_k$ proportional to $x^{b-1}\adj(\overline{\varphi_k})$, where
+$\varphi_k=\theta_k(2+x)(1-x)+\rho_k$ are explicit ``level polynomials'' and $\adj$ is the adjugate in
+$\Z[x]/(x^b-1)$; the index of this lattice in its saturation is $\prod_k\cont(\adj\overline{\varphi_k})^{\,b^{s-k}}$, where
+$\cont$ denotes the content (the gcd of the coefficients).
+A level is primitive if and only if $\deg\gcd(\varphi_k,x^b-1)\le1$ over every prime field, and the exceptional primes
+divide either $\gcd(\theta_k,\rho_k)$ or a fixed integer depending only on $b$.
+We deduce an unconditional effective theorem for one level, and, for every $(b,s)$ satisfying a finite decidable
+coprimality condition (verified for eight pairs), an infinite arithmetic progression of good scalings and the bound
+$\limsup_{l\to\infty}f(l\,b^s)\le(1+2^{-b})^{(b^s-1)/(b-1)}(2/3)^s$, where $f(n)$ is the infimum of $\max A/2^{n-1}$
+over dissociated sets of size $n$.
+We give computer-certified explicit dissociated sets, for instance one with $|A|=43\,923$ and
+$\max A<0.15853\cdot2^{|A|}$ and one with $|A|=3\,841\,966$ and $\max A<0.10304\cdot2^{|A|}$; these are the first
+explicit sets below Bohman's constant. Since $f$ is nonincreasing (double every element and adjoin an odd number), each
+of these bounds persists for every larger size, so that for instance $f(n)\le0.206072$ for all $n\ge3\,841\,966$.
+Under the coprimality conjecture the method yields $f(n)\le n^{-c/\log\log n}$ for all sufficiently large $n$.
+Finally we show that the exponent of decay is governed by the heights of admissible pairs of lattices.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Background}
+Let $A\subset\N$ be finite. We call $A$ \emph{dissociated} (or say that $A$ has \emph{distinct subset sums}) if the map
+$S\mapsto\sum_{a\in S}a$ is injective on the subsets $S\subseteq A$. Erd\H{o}s, who called this ``perhaps my first serious
+problem'', conjectured that every dissociated $A\subseteq\{1,\dots,N\}$ with $|A|=n$ satisfies $N\gg2^n$, and offered
+\$500 for a proof or disproof; it is Problem~1 of the collection \cite{EP1}. Writing
+\[
+ f(n):=\inf\Bigl\{\frac{\max A}{2^{n-1}} : A\subset\N \text{ dissociated},\ |A|=n\Bigr\},
+\]
+the powers of two give $f(n)\le1$. Until 2026, every improvement of this trivial bound came from an explicit construction, and
+each such bound propagates from one size to all larger sizes because $f$ is nonincreasing (Lemma~\ref{lem:mono} below). The
+Conway--Guy sequence \cite{CoGu68,Gu82}, shown to consist of dissociated sets by Bohman \cite{Bo96}, gives
+$N<0.23513\cdot2^n$ for $n\ge40$; Lunnon's computer search \cite{Lu88} gives $N<0.22096\cdot2^n$ for $n\ge67$; and Bohman
+\cite{Bo98} obtained $f(n)\le0.44004$ for large $n$, i.e.\ $N\le0.22002\cdot2^n$, the best explicit construction prior to
+the present paper.
+In the other direction Erd\H{o}s and Moser \cite{Er56} proved $N\ge(\frac14-o(1))2^n/\sqrt n$; the constant was improved
+several times (Elkies \cite{El86}, Aliev \cite{Al08}; see the table in \cite{St23} for the full history), the current
+record $\sqrt{2/\pi}$ being due to Elkies and Gleason (unpublished) and to Dubroff, Fox and Xu \cite{DFX21}, who prove
+$N\ge\binom{n}{\lfloor n/2\rfloor}$.
+
+In September 2026 the conjecture was \emph{disproved}: for every $\varepsilon>0$ there are arbitrarily large $n$ with
+$f(n)<\varepsilon$. The construction is due to the AI system GPT-6 Astra; we follow the exposition of Bloom
+\cite{EP1}, whose notation we adopt. The proof has two parts. The first is an elementary iterative construction of
+lattices $\Lat_s\subset V_d=\{x\in\R^d:\sum_ix_i=0\}$, $d=b^s$, which avoid the open unit cube and have small covolume.
+The second is the passage from $\Lat_s$ to an integer vector with dissociated coordinates: one needs a \emph{primitive}
+lattice $L=u^\perp\cap\Z^d$ close to $Q\Lat_s$, and its existence was derived from the equidistribution of primitive
+lattices in the space of lattices \cite{HoKa23}, which is non-effective. Bloom remarks that an effective version ``could
+prove something like $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$''. We note in passing that, combined with the
+classical monotonicity of $f$ (Lemma~\ref{lem:mono}), the disproof gives $f(n)\to0$ along all $n$; what it does not
+provide is a single explicit set, an explicit size $n$, or an explicit rate.
+
+\subsection{Results}
+This paper carries out the second step explicitly. Throughout, $b\ge5$ is odd with $3\nmid b$, $s\ge1$, $d=b^s$,
+$R_s=\Z[x_1,\dots,x_s]/(x_1^b-1,\dots,x_s^b-1)\cong\Z^d$, $\gpoly(x)=(2+x)(1-x)=2-x-x^2$, and
+\begin{equation}\label{eq:Delta}
+\Delta_{b,s}:=\frac{(1+2^{-b})^{(b^s-1)/(b-1)}}{(3/2)^s}
+\end{equation}
+is the normalised covolume $\covol(\Lat_s)/\sqrt d$ of the construction (Proposition~\ref{prop:closed}).
+
+\paragraph{Closed form of the lattices.} We show (Proposition~\ref{prop:closed}) that
+\[
+\Lat_s=\bigoplus_{k=1}^{s} 2^{-k}(2+x_1)\cdots(2+x_k)(1-x_k)\,\Z[x_k,\dots,x_s],\qquad
+v_s=2^{-s}\prod_{k=1}^s(2+x_k),
+\]
+where $\Z[x_k,\dots,x_s]\subset R_s$ is the span of the monomials not involving $x_1,\dots,x_{k-1}$.
+
+\paragraph{An explicit primitivisation.} For $Q\in2^s\Z$ we add to each basis vector
+$Q\,2^{-k}(2+x_1)\cdots(2+x_k)(1-x_k)x_k^im$ of $Q\Lat_s$ ($0\le i\le b-2$, $m$ a monomial in $x_{k+1},\dots,x_s$) the
+monomial $x_1^{b-1}\cdots x_{k-1}^{b-1}x_k^im$. This defines a lattice $L_s(Q)\subset\Z^d$ of rank $d-1$.
+Define \emph{level polynomials} $\varphi_k=\theta_k\gpoly+\rho_k\in\Z[x]/(x^b-1)$ recursively by $\theta_1=Q/2$, $\rho_1=1$,
+$\psi_k=\adj(\overline{\varphi_k})$ (the adjugate element, $\psi_k\overline{\varphi_k}=\Nm(\varphi_k)$),
+$\gamma_k=\cont(\psi_k)$, $\tilde u_k=\pm x^{b-1}\psi_k/\gamma_k$, $a_k=\langle\tilde u_k,x^{b-1}\rangle$,
+$c_k=\langle\tilde u_k,2+x\rangle$, $\theta_{k+1}=2^{-(k+1)}Q\,c_1\cdots c_k$, $\rho_{k+1}=a_1\cdots a_k$
+(Definition~\ref{def:levels}). The constant $K_s$ below is explicit (Proposition~\ref{prop:K}).
+
+\begin{theorem}[normal vector and index]\label{thm:main-structure}
+Let $Q\ge8K_s$. Then $L_s(Q)$ has rank $d-1$, its orthogonal complement is spanned by the primitive integer vector
+$u=\tilde u_1\otimes\dots\otimes\tilde u_s$, i.e.\ $u(x)=\prod_k\tilde u_k(x_k)$, all coordinates of $u$ are positive, and
+\[
+ [\,\sat L_s(Q):L_s(Q)\,]=\prod_{k=1}^{s}\gamma_k^{\,b^{s-k}} .
+\]
+In particular $L_s(Q)$ is primitive if and only if $\gamma_k=\cont\adj(\overline{\varphi_k})=1$ for every $k$.
+\end{theorem}
+
+\begin{theorem}[level criterion and exceptional primes]\label{thm:levels-intro}
+For $\varphi=\theta\gpoly+\rho\in\Z[x]/(x^b-1)$ with $\Nm(\varphi)\ne0$, one has $\cont\adj(\bar\varphi)=1$ if and only if
+$\deg\gcd_{\F_p}(\varphi,x^b-1)\le1$ for every prime $p$. Let $P_b$ be the set of odd primes dividing $b(2^b+1)n_b$,
+where $n_b=\prod_{0<i<j<b}\Res_z\bigl(\tfrac{z^b-1}{z-1},\,1+z^i+z^j\bigr)\neq0$. If $p$ is an odd prime with $p\notin P_b$
+and $p\nmid\gcd(\theta,\rho)$, then $\deg\gcd_{\F_p}(\varphi,x^b-1)\le1$.
+\end{theorem}
+
+\begin{theorem}[first level, unconditional]\label{thm:A-intro}
+Let $q\ge4K_1$ be an integer with $\rad(P_b)\mid q$. Then $L_1(2q)$ is primitive; the coordinates of $\tilde u_1$ are
+positive integers forming a $(2q-K_1)$-dissociated set, with $\max\tilde u_1\le(2q)^{b-1}\Delta_{b,1}(1+5K_1/q)$.
+Consequently, for every $l$ with $2^l\le2q-K_1$ the set $\{2^j\tilde u_{1,i}:0\le j<l,\ 0\le i<b\}$ is dissociated of size
+$lb$, and $f(lb)\le\max\tilde u_1/2^{l(b-1)}$.
+\end{theorem}
+
+\paragraph{Explicit dissociated sets.} Theorem~\ref{thm:main-structure}, a perturbation lemma (Lemma~\ref{lem:cube})
+and a size estimate (Lemma~\ref{lem:shape}) together give the following.
+
+\begin{theorem}\label{thm:explicit-intro}
+Let $2^s\mid Q$, $Q\ge8K_s$, and suppose $\gamma_k=1$ for $k=1,\dots,s$ (a finite computation).
+Then the $d=b^s$ coordinates of $u$ are positive integers forming a $(Q-K_s)$-dissociated set, and
+\[
+\max u=\prod_{k=1}^s\max\tilde u_k\ \le\ Q^{d-1}\Delta_{b,s}\,(1+10K_s/Q).
+\]
+For every $l$ with $2^l\le Q-K_s$ the set $A=\{2^ju_i\}$ is dissociated, $|A|=ld$, and $f(ld)\le\max u/2^{l(d-1)}$.
+\end{theorem}
+
+The certificate $\gamma_1=\dots=\gamma_s=1$ costs $s$ adjugate computations of $b\times b$ integer matrices, so it is
+cheap even when $d=b^s$ is in the tens of thousands. Table~\ref{tab:main} lists the outcomes; for example
+\begin{align*}
+ (b,s)=(11,3):\quad & n=43\,923,\qquad\ \ \max A<0.317045\cdot2^{n-1}=0.158523\cdot2^{n},\\
+ (b,s)=(13,4):\quad & n=1\,199\,562,\quad\ \max A<0.265069\cdot2^{n-1}=0.132535\cdot2^{n},\\
+ (b,s)=(17,4):\quad & n=3\,841\,966,\quad\ \max A<0.206072\cdot2^{n-1}=0.103036\cdot2^{n}.
+\end{align*}
+To our knowledge these are the first explicit dissociated sets beating Bohman's constant $0.22002$. By
+Lemma~\ref{lem:mono} each bound persists for all larger sizes: there are explicit dissociated sets with
+$\max A<0.158523\cdot2^{n}$ for every $n\ge43\,923$ and with $\max A<0.103036\cdot2^{n}$ for every $n\ge3\,841\,966$
+(Corollary~\ref{cor:alln}).
+
+\paragraph{Infinitely many good scalings.} Write $Q=2^{s+1}t$. Before contents are normalised, the level data
+$\hat a_k,\hat c_k$ are polynomials in $t$ with integer coefficients (Section~\ref{sec:AP}). Let $H(b,s)$ be the
+statement that $\hat a_k$ and $\hat c_k$ are coprime in $\Q[t]$ for $1\le k\le s-1$.
+
+\begin{theorem}\label{thm:AP-intro}
+Assume $H(b,s)$. There is an integer $M\ge1$ such that $L_s(2^{s+1}t)$ is primitive for every $t\equiv0\pmod M$ with
+$2^{s+1}t\ge8K_s$. Consequently $\limsup_{l\to\infty}f(l\,b^s)\le\Delta_{b,s}$.
+\end{theorem}
+
+$H(b,s)$ is a finite, decidable statement, and we have verified it for
+\[
+(b,s)\in\{(5,2),(7,2),(11,2),(13,2),(5,3),(7,3),(11,3),(13,3)\}
+\]
+(Section~\ref{sec:comp}); hence $\limsup_lf(1331\,l)\le\Delta_{11,3}<0.3162$ and $\limsup_lf(2197\,l)\le\Delta_{13,3}<0.303$
+unconditionally (Corollary~\ref{cor:numbers}). If $H(b,s)$ holds for all $(b,s)$ (Conjecture~\ref{conj:H}), the
+construction gives $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$ with an explicit $c>0$ (Theorem~\ref{thm:rate},
+whose proof we only sketch), and then, by monotonicity, for all sufficiently large $n$ with a smaller explicit constant
+(Corollary~\ref{cor:rate-all}).
+
+\paragraph{Two structural remarks.} The sizes $n=ld$ reached by the construction itself form a sparse set, and in
+Section~\ref{sec:remarks} we explain why the natural padding operations \emph{inside} the construction lose a factor
+exponential in the number of added elements; the gaps between consecutive sizes are filled by the classical doubling step
+(Lemma~\ref{lem:mono}) rather than by the lattice construction. We also show that the exponent of decay is governed by the \emph{height} of
+admissible pairs: an admissible pair in dimension $b$ with height $h\ge b^{\alpha}$ and covolume $1+O(b^{-Cs})$ would give
+$f(n)\le n^{-\alpha+o(1)}$, while heights are $O(\sqrt b)$ (Proposition~\ref{prop:height}).
+
+\paragraph{Organisation.} Section~\ref{sec:lattices} recasts the lattices of \cite{EP1} in the polynomial model $R_s$,
+in which a cyclic shift of coordinates is multiplication by a variable, and proves the closed form.
+Section~\ref{sec:perturb} contains the two perturbation lemmas and the constant $K_s$. Section~\ref{sec:tensor} defines
+$L_s(Q)$ and proves Theorems~\ref{thm:main-structure}, \ref{thm:levels-intro} and \ref{thm:A-intro}.
+Section~\ref{sec:main} deduces Theorems~\ref{thm:explicit-intro} and \ref{thm:AP-intro}, the monotonicity lemma with its
+corollaries, and the conditional rate. Section~\ref{sec:comp} describes the computations behind Table~\ref{tab:main}, and
+Section~\ref{sec:remarks} discusses the sizes reached by the construction, the height problem and Siegel's lemma.
+
+\subsection{Notation and conventions}\label{sec:notation}
+For a lattice $L$ of rank $r$ in $\R^d$, $\covol(L)$ is the $r$-dimensional volume of a fundamental domain.
+A sublattice $L\subseteq\Z^d$ is \emph{primitive} (or saturated) if $L=(L\otimes\R)\cap\Z^d$; we write
+$\sat L$ for $(L\otimes\R)\cap\Z^d$. If $L\subset\Z^d$ has rank $d-1$ with basis matrix $B\in\Z^{d\times(d-1)}$, the
+vector $w$ of signed maximal minors of $B$ spans $L^\perp$ and $\gcd(w)=[\sat L:L]$; a primitive lattice of rank $d-1$
+is $R(u):=u^\perp\cap\Z^d$ for a primitive $u\in\Z^d$, and $\covol(R(u))=|u|_2$.
+For $u\in\Z^d$ and real $Q>0$, the coordinates of $u$ are \emph{$Q$-dissociated} if the only $c\in\Z^d$ with $|c_i|<Q$
+for all $i$ and $\sum_ic_iu_i=0$ is $c=0$; equivalently $R(u)\cap\dcube Q^d=\{0\}$.
+The \emph{lift} of a $2^l$-dissociated vector $u$ with positive coordinates is
+$A=\{2^ju_i:0\le j<l,\ 1\le i\le d\}$; two subset sums of $A$ are $\sum_ic_iu_i$ and $\sum_ic'_iu_i$ with
+$0\le c_i,c'_i<2^l$, so $A$ is dissociated, $|A|=ld$, $\max A=2^{l-1}\max u$, and
+\begin{equation}\label{eq:lift}
+ f(ld)\le\frac{2^{l-1}\max u}{2^{ld-1}}=\frac{\max u}{2^{l(d-1)}} .
+\end{equation}
+$R_b=\Z[x]/(x^b-1)$ is identified with $\Z^b$ via $x^i\leftrightarrow e_i$; the standard inner product becomes
+$\langle f,g\rangle=[x^0](f\bar g)$, where $\bar g(x)=g(x^{-1})$ and $[x^i]h$ denotes the coefficient of $x^i$ in $h$;
+in particular $\langle f,x^i\rangle=[x^i]f$. For $a\in R_b$ let $m_a$ be the $b\times b$ matrix of multiplication by $a$
+(a circulant), $\Nm(a)=\det m_a=\prod_{\zeta^b=1}a(\zeta)$, and $\adj(a)\in R_b$ the element with $m_{\adj(a)}=\adj(m_a)$,
+so that $a\adj(a)=\Nm(a)$; since $\adj(m_a)$ commutes with every $m_c$, it is indeed a multiplication matrix.
+Note $m_a^{T}=m_{\bar a}$. The content $\cont(\psi)$ of $\psi\in R_b$ is the gcd of its coefficients.
+Finally $\one_d=(1,\dots,1)\in\R^d$, $V_d=\one_d^\perp$, and $\mu_b$ is the group of complex $b$-th roots of unity.
+
+\section{The lattices}\label{sec:lattices}
+
+\subsection{Admissible pairs}
+Following \cite{EP1}, a pair $(\Lat,v)$ with $\Lat\subset V_d$ a lattice of rank $d-1$ and $v\in\R^d\setminus V_d$ is
+\emph{admissible} if
+\begin{enumerate}[label=(A\arabic*)]
+\item $\Lat\cap\dcube1^d=\{0\}$;
+\item $tv\in\Lat+\dcube1^d$ with $t\in\R$ implies $|t|<1$.
+\end{enumerate}
+Its \emph{height} is $h=\langle v,\one_d\rangle$, and $\Gamma=\Lat\oplus\Z v$ satisfies
+$\covol(\Gamma)=\covol(\Lat)\,h/\sqrt d$. We write $\Delta=\covol(\Lat)/\sqrt d=\covol(\Gamma)/h$.
+Conditions (A1)--(A2) imply $\Gamma\cap\dcube1^d=\{0\}$, hence $\covol(\Gamma)\ge1$ by Minkowski's theorem, so
+$\Delta\ge1/h$.
+
+\medskip\noindent\emph{The base pair.} Let $b\ge3$ be odd. Put
+\[
+ \Lat_1=\tfrac12\gpoly\,R_b=\tfrac12(2+x)\,\bigl((1-x)R_b\bigr),\qquad v_1=\tfrac12(2+x).
+\]
+Since $(1-x)R_b=\Z^b\cap V_b$ and multiplication by $\frac12(2+x)$ is the map $M=I+\frac12P$ ($P$ the cyclic shift),
+this is exactly the base pair of \cite{EP1}: $h_1=3/2$, $\covol(\Gamma_1)=\det M=1+2^{-b}$,
+$\Delta_{b,1}=\frac23(1+2^{-b})$, and $(\Lat_1,v_1)$ is admissible (\cite{EP1}; the proof uses only that $b$ is odd).
+
+\subsection{Tensor products of admissible pairs}
+\begin{proposition}\label{prop:tensor}
+Let $(\Lat,v)$ be admissible in $\R^{b}$ and $(\Lat',v')$ admissible in $\R^{d'}$. In $\R^b\otimes\R^{d'}=\R^{bd'}$ put
+\[
+\Lat''=\Lat\otimes\Z^{d'}\ \oplus\ v\otimes\Lat',\qquad v''=v\otimes v'.
+\]
+Then $(\Lat'',v'')$ is admissible, of height $hh'$, and $\covol(\Gamma'')=\covol(\Gamma)^{d'}\covol(\Gamma')$.
+\end{proposition}
+\begin{proof}
+View elements of $\R^b\otimes\R^{d'}$ as $b\times d'$ matrices. An element of $\Lat''$ has the form
+$X=\sum_i\beta_iz_i^{T}+v\lambda^{T}$ with $\beta_i\in\Lat$, $z_i\in\Z^{d'}$, $\lambda\in\Lat'$, so its $m$-th column is
+$\sum_i\beta_iz_{i,m}+\lambda_mv\in\Lat+\lambda_mv$. Coordinate sums vanish, and $\Lat\otimes\R^{d'}$, $v\otimes\R^{d'}$
+intersect trivially, so $\Lat''$ is a lattice of rank $(b-1)d'+(d'-1)=bd'-1$ in $V_{bd'}$.
+If $X\in\dcube1^{bd'}$, each column lies in $(\Lat+\lambda_mv)\cap\dcube1^b$, so $|\lambda_m|<1$ by (A2) for $(\Lat,v)$;
+thus $\lambda\in\Lat'\cap\dcube1^{d'}=\{0\}$, and then every column lies in $\Lat\cap\dcube1^b=\{0\}$.
+If $X\in\Lat''+tv''$ has all entries in $\dcube11$, the $m$-th column lies in $\Lat+(\lambda_m+tv'_m)v$, so
+$|\lambda_m+tv'_m|<1$ for all $m$, i.e.\ $\lambda+tv'\in(\Lat'+tv')\cap\dcube1^{d'}$, and (A2) for $(\Lat',v')$ gives
+$|t|<1$. The height is $\langle v,\one_b\rangle\langle v',\one_{d'}\rangle=hh'$. Finally
+$\Gamma''=\Lat\otimes\Z^{d'}\oplus v\otimes\Gamma'$; the first summand spans $V_b\otimes\R^{d'}$ and has covolume
+$\covol(\Lat)^{d'}$, while the projection of $v\otimes\Gamma'$ onto $(V_b\otimes\R^{d'})^\perp=\one_b\otimes\R^{d'}$ is
+$\frac{h}{\sqrt b}\,\hat n\otimes\Gamma'$ with $\hat n=\one_b/\sqrt b$, of covolume $(h/\sqrt b)^{d'}\covol(\Gamma')$.
+Hence $\covol(\Gamma'')=(\covol(\Lat)h/\sqrt b)^{d'}\covol(\Gamma')=\covol(\Gamma)^{d'}\covol(\Gamma')$.
+\end{proof}
+
+The iteration of \cite{EP1} is the same operation with the roles of the two factors exchanged; both produce admissible
+pairs with identical invariants. We use the order of Proposition~\ref{prop:tensor} because it gives a clean closed form.
+
+\begin{definition}
+$(\Lat_1,v_1)$ is the base pair in the variable $x_1$; for $s\ge2$,
+$(\Lat_s,v_s):=(\Lat_1,v_1)\otimes(\Lat_{s-1},v_{s-1})$, where $\Lat_{s-1}$ lives in the variables $x_2,\dots,x_s$.
+\end{definition}
+
+\begin{proposition}[closed form]\label{prop:closed}
+Let $\Z[x_k,\dots,x_s]\subset R_s$ be the span of the monomials in $x_k,\dots,x_s$. Then
+\[
+\Lat_s=\bigoplus_{k=1}^{s}\Lat_s^{(k)},\qquad
+\Lat_s^{(k)}=2^{-k}(2+x_1)\cdots(2+x_k)(1-x_k)\,\Z[x_k,\dots,x_s],
+\]
+$v_s=2^{-s}\prod_{k=1}^{s}(2+x_k)$, $h_s=(3/2)^s$, $\covol(\Gamma_s)=(1+2^{-b})^{(b^s-1)/(b-1)}$ and $\covol(\Lat_s)/\sqrt{b^s}=\Delta_{b,s}$ as in
+\eqref{eq:Delta}. A basis of $\Lat_s^{(k)}$ consists of the vectors
+$2^{-k}(2+x_1)\cdots(2+x_k)(1-x_k)\,x_k^i\,m$, $0\le i\le b-2$, $m$ a monomial in $x_{k+1},\dots,x_s$; the
+denominators of $\Lat_s$ divide $2^s$.
+\end{proposition}
+\begin{proof}
+Induction on $s$; $s=1$ is the definition of $\Lat_1$, since $(1-x)R_b$ has basis $(1-x)x^i$, $i\le b-2$.
+For $s\ge2$, $\Lat_1\otimes\Z[x_2,\dots,x_s]=\frac12(2+x_1)(1-x_1)R_s=\Lat_s^{(1)}$ and
+$v_1\otimes\Lat_{s-1}=\frac12(2+x_1)\bigoplus_{k\ge2}2^{-(k-1)}(2+x_2)\cdots(2+x_k)(1-x_k)\Z[x_k,\dots,x_s]
+=\bigoplus_{k\ge2}\Lat_s^{(k)}$ by the induction hypothesis. The invariants follow from
+Proposition~\ref{prop:tensor}: $h_s=\frac32h_{s-1}$ and
+$\covol(\Gamma_s)=\covol(\Gamma_1)^{b^{s-1}}\covol(\Gamma_{s-1})$, which gives the exponent $1+b+\dots+b^{s-1}$.
+\end{proof}
+
+\section{Perturbation lemmas}\label{sec:perturb}
+
+Let $(\Lat,v)$ be admissible in $\R^d$, let $b_1,\dots,b_{d-1}$ be a fixed basis of $\Lat$, and let
+$b_1^*,\dots,b_{d-1}^*\in V_d$ be the dual basis, so that $\langle b_i,b_j^*\rangle=\delta_{ij}$. Put
+\begin{equation}\label{eq:K}
+ K:=\sum_{j=1}^{d-1}|b_j^*|_1 .
+\end{equation}
+For $\lambda=\sum_jm_jb_j\in\Lat$ we have $m_j=\langle\lambda,b_j^*\rangle$, hence
+\begin{equation}\label{eq:coeff}
+ \sum_j|m_j|\le K\,|\lambda|_\infty .
+\end{equation}
+Let $Q>0$ be real, let $r_1,\dots,r_{d-1}\in\{1,\dots,d\}$ be \emph{distinct} rows, and
+\[
+ L:=\operatorname{span}_\Z\{\ell_j:=Qb_j+e_{r_j}\ :\ 1\le j\le d-1\}\subset\R^d .
+\]
+
+\begin{lemma}[cube avoidance]\label{lem:cube}
+If $Q>K$ then the $\ell_j$ are linearly independent and $L\cap\dcube{Q-K}^d=\{0\}$. In particular, if $L\subseteq\Z^d$
+is primitive with normal vector $u$, the coordinates of $u$ are $(Q-K)$-dissociated.
+\end{lemma}
+\begin{proof}
+Let $x=\sum_jm_j\ell_j=Q\lambda+\sum_jm_je_{r_j}$ with $\lambda=\sum_jm_jb_j$. If $\lambda=0$ then all $m_j=0$ and $x=0$.
+Otherwise $|\lambda|_\infty\ge1$ by (A1), and by \eqref{eq:coeff}
+$|x|_\infty\ge Q|\lambda|_\infty-\sum_j|m_j|\ge(Q-K)|\lambda|_\infty\ge Q-K>0$.
+\end{proof}
+
+\begin{lemma}[shape of the normal vector]\label{lem:shape}
+\textup{(i)} Let $Q>K$ and let $u\in\R^d\setminus\{0\}$ be orthogonal to $L$. Then $\langle u,\one_d\rangle\ne0$ and,
+after replacing $u$ by $-u$ if necessary, $u=\alpha(\one_d+\eta)$ with $\alpha>0$, $\eta\in V_d$ and
+$|\eta|_\infty\le K/(Q-K)$. In particular, if $Q>2K$ all coordinates of $u$ have the same sign.
+
+\textup{(ii)} If moreover $Q>2K$, $Qb_j\in\Z^d$ for all $j$, and $u\in\Z^d$ is primitive, then
+\begin{gather*}
+\alpha\le Q^{d-1}\Delta\,e^{K/Q}\Bigl(1+\tfrac{K^2}{(Q-K)^2}\Bigr)^{1/2},\\
+\max u\le Q^{d-1}\Delta\,e^{K/Q}\Bigl(1+\tfrac{K^2}{(Q-K)^2}\Bigr)^{1/2}\Bigl(1+\tfrac{K}{Q-K}\Bigr)
+\le Q^{d-1}\Delta\Bigl(1+\frac{10K}{Q}\Bigr).
+\end{gather*}
+\end{lemma}
+\begin{proof}
+(i) Write $u=\alpha\one_d+\eta'$ with $\eta'\in V_d$. From $\langle u,\ell_j\rangle=0$ and $\langle\one_d,b_j\rangle=0$
+we get $Q\langle\eta',b_j\rangle+\alpha+\eta'_{r_j}=0$ for all $j$. If $\alpha=0$ then
+$\eta'=\sum_j\langle\eta',b_j\rangle b_j^*=-Q^{-1}\sum_j\eta'_{r_j}b_j^*$, so $|\eta'|_\infty\le(K/Q)|\eta'|_\infty$ and
+$u=0$, a contradiction. So $\alpha\ne0$; take $\alpha>0$ and $\eta=\eta'/\alpha$, so that
+$\langle\eta,b_j\rangle=-(1+\eta_{r_j})/Q$ and $\eta=-Q^{-1}\sum_j(1+\eta_{r_j})b_j^*$, whence
+$|\eta|_\infty\le Q^{-1}(1+|\eta|_\infty)K$, i.e.\ $|\eta|_\infty\le K/(Q-K)$, which is $<1$ when $Q>2K$.
+
+(ii) Since $L\subseteq R(u)$, $\covol(L)\ge\covol(R(u))=|u|_2=\alpha|\one_d+\eta|_2\ge\alpha\sqrt d$.
+The orthogonal projection $\pi\colon u^\perp\to V_d$ is bijective, as $\langle u,\one_d\rangle\ne0$, and it multiplies
+covolumes by $\cos\vartheta=|\langle u,\one_d\rangle|/(|u|_2\sqrt d)=\sqrt d/|\one_d+\eta|_2\ge(1+|\eta|_\infty^2)^{-1/2}$.
+Now $\pi(\ell_j)=Qb_j+\pi(e_{r_j})$ and $\pi(e_{r_j})=\sum_i\langle e_{r_j},b_i^*\rangle b_i=\sum_i(b_i^*)_{r_j}b_i$, so
+$\pi(L)$ has basis matrix $B(QI+A)$ with $A_{ij}=(b_i^*)_{r_j}$, where $B$ is the basis matrix of $\Lat$. Hence
+\begin{align*}
+\covol(\pi(L))&=Q^{d-1}\covol(\Lat)\,|\det(I+A/Q)|\\
+&\le Q^{d-1}\sqrt d\,\Delta\prod_i\Bigl(1+\frac{|b_i^*|_1}{Q}\Bigr)\le Q^{d-1}\sqrt d\,\Delta\,e^{K/Q} .
+\end{align*}
+Here the first inequality is Hadamard's, using $\sum_j|A_{ij}|\le|b_i^*|_1$ (the rows $r_j$ are distinct), and the
+second follows from \eqref{eq:K}. Therefore $\alpha\sqrt d\le\covol(L)=\covol(\pi(L))/\cos\vartheta\le Q^{d-1}\sqrt d\,\Delta\,e^{K/Q}(1+|\eta|_\infty^2)^{1/2}$.
+The last inequality of the lemma is elementary for $x=K/Q\le\frac12$: $e^x\le1+1.3x$,
+$(1+x^2/(1-x)^2)^{1/2}\le1+x$, $1+x/(1-x)\le1+2x$, and $(1+1.3x)(1+x)(1+2x)\le1+10x$.
+\end{proof}
+
+\begin{proposition}[the constant $K_s$]\label{prop:K}
+Let $K_1=\sum_{i\le b-2}|b_i^*|_1$ for the base basis $b_i=\frac12\gpoly x^i$ of $\Lat_1$, and let
+$c_i=\langle b_i^*,v_1\rangle/h_1$. For the basis of $\Lat_s$ in Proposition~\ref{prop:closed}, which is
+$\{b_i\otimes m\}\cup\{v_1\otimes b'_j\}$ with $b'_j$ the basis of $\Lat_{s-1}$ and $d'=b^{s-1}$, a dual basis is
+\[
+(b_i\otimes m)^*=b_i^*\otimes m-c_i\,\one_b\otimes\bigl(m-\tfrac1{d'}\one_{d'}\bigr),\qquad
+(v_1\otimes b'_j)^*=\tfrac{1}{h_1}\one_b\otimes(b'_j)^*.
+\]
+Consequently the constant \eqref{eq:K} for this basis of $\Lat_s$ equals
+\[
+K_s=d'\sum_{i}\Bigl(\bigl|b_i^*-c_i\bigl(1-\tfrac1{d'}\bigr)\one_b\bigr|_1+|c_i|\,b\,\tfrac{d'-1}{d'}\Bigr)+\tfrac{b}{h_1}K_{s-1}
+\ \le\ d'\bigl(1+\tfrac{4b}{3}\bigr)K_1+\tfrac{2b}{3}K_{s-1}.
+\]
+\end{proposition}
+\begin{proof}
+Direct verification of $\langle\cdot,\cdot\rangle=\delta$, using $\langle\one_b,b_i\rangle=0$,
+$\langle\one_b,v_1\rangle=h_1$, $\langle m-\frac1{d'}\one_{d'},b'_j\rangle=(b'_j)_m$, and that all vectors lie in
+$V_{bd'}$. The $\ell^1$ norms are read off blockwise; the crude bound uses
+$|c_i|\le|b_i^*|_1|v_1|_\infty/h_1=\frac23|b_i^*|_1$.
+\end{proof}
+Numerically $K_1(5)=424/55\approx7.71$, $K_1(7)\approx14.19$, $K_1(11)\approx32.20$, $K_1(13)\approx44.03$, and,
+for instance, $K_2(5)\approx98.25$, $K_3(11)\approx1.78\cdot10^4$, $K_4(13)\approx5.52\cdot10^5$. We checked the
+recursion against a direct computation of the dual basis for $(b,s)\in\{(5,2),(7,2),(5,3)\}$.
+
+
+\section{The tensor perturbation}\label{sec:tensor}
+
+Fix $b\ge5$ odd with $3\nmid b$, $s\ge1$, $d=b^s$, and $R_s$, $x_1,\dots,x_s$ as in Proposition~\ref{prop:closed}.
+
+\begin{definition}[the lattice $L_s(Q,\rho)$]\label{def:L}
+Let $Q\in2^s\Z_{>0}$ and $\rho\in\Z_{>0}$. For $1\le k\le s$ put
+\[
+\Phi_k=\Phi_k^{(Q,\rho)}:=\frac{Q}{2^k}(1-x_k)\prod_{j\le k}(2+x_j)\ +\ \rho\prod_{j<k}x_j^{\,b-1}\ \in R_s,
+\]
+and let $L_s(Q,\rho)$ be the $\Z$-span of the $d-1$ vectors
+$\ell_{k,i,m}:=x_k^i\,m\,\Phi_k$, where $1\le k\le s$, $0\le i\le b-2$, and $m$ runs over the monomials in
+$x_{k+1},\dots,x_s$. We write $L_s(Q)=L_s(Q,1)$.
+\end{definition}
+By Proposition~\ref{prop:closed}, $\ell_{k,i,m}=Q\,\beta_{k,i,m}+\rho\,\mu_{k,i,m}$, where the $\beta_{k,i,m}$ form the
+basis of $\Lat_s$ and $\mu_{k,i,m}=x_1^{b-1}\cdots x_{k-1}^{b-1}x_k^im$ are \emph{distinct} monomials (the variable
+$x_k$ is the first one with exponent $\le b-2$), none of them equal to $\prod_jx_j^{b-1}$. Thus $L_s(Q)$ is exactly the
+lattice of Section~\ref{sec:perturb} for $\Lat_s$ with the tensor basis and distinct rows, and
+$L_s(Q,\rho)=\rho\cdot\operatorname{span}\{(Q/\rho)\beta_{k,i,m}+\mu_{k,i,m}\}$ is the same construction with the real
+scale $Q/\rho$.
+
+\begin{definition}[level data]\label{def:levels}
+Set $\theta_1=Q/2$ and $\rho_1=\rho$. For $k\ge1$, provided $\theta_k,\rho_k>0$, put
+\begin{gather*}
+\varphi_k=\theta_k\gpoly+\rho_k\in R_b,\qquad \Nm_k=\Nm(\varphi_k),\qquad
+\psi_k=\adj(\overline{\varphi_k})\quad(\text{so }\psi_k\overline{\varphi_k}=\Nm_k),\\
+\gamma_k=\cont(\psi_k),\qquad \tilde u_k=\varepsilon_k\,x^{b-1}\psi_k/\gamma_k\quad
+(\varepsilon_k\in\{\pm1\}\text{ with }\langle\tilde u_k,\one_b\rangle>0),\\
+a_k=\langle\tilde u_k,x^{b-1}\rangle=\varepsilon_k\psi_{k,0}/\gamma_k,\qquad
+c_k=\langle\tilde u_k,2+x\rangle=2\tilde u_{k,0}+\tilde u_{k,1},\\
+\theta_{k+1}=\frac{Q}{2^{k+1}}\,c_1\cdots c_k,\qquad \rho_{k+1}=\rho\,a_1\cdots a_k ,
+\end{gather*}
+where $\tilde u_{k,i}$ and $\psi_{k,i}$ denote the coefficients of $x^i$; thus $\tilde u_{k,i}=\varepsilon_k\psi_{k,i+1}/\gamma_k$
+with indices mod $b$.
+\end{definition}
+
+\begin{lemma}[non-degeneracy]\label{lem:nondeg}
+If $Q\ge8K_s\rho$, then for every $k\le s$: $\theta_k,\rho_k>0$, $\Nm_k\ne0$, and $\tilde u_k$ has all coordinates
+positive (so $a_k,c_k>0$). Moreover $2\theta_k/\rho_k\ge Q/\rho$.
+\end{lemma}
+\begin{proof}
+For $\theta,\rho'>0$ the element $\theta\gpoly+\rho'$ is not a zero divisor of $R_b\otimes\Q$: a root $\zeta\in\mu_b$ would
+satisfy $\gpoly(\zeta)=-\rho'/\theta\in\Q_{<0}$, but $\gpoly(\zeta)=2-\zeta-\zeta^2$ is rational only for
+$\zeta\in\{1,-1,\omega,\bar\omega\}$ ($\omega$ a primitive cube root of unity), and
+$\mu_b\cap\{1,-1,\omega,\bar\omega\}=\{1\}$ because $b$ is odd and $3\nmid b$, while $\gpoly(1)=0$.
+Now induct on $k$. Given $\theta_k,\rho_k>0$ we have $\Nm_k\ne0$ and $\psi_k\ne0$. The lattice
+$L^{(k)}:=\operatorname{span}\{x^i\varphi_k:i\le b-2\}=\rho_k\operatorname{span}\{(2\theta_k/\rho_k)b_i+e_i\}$ is of the type
+of Lemma~\ref{lem:shape} with $K=K_1$ and real scale $Q_k':=2\theta_k/\rho_k$, and its orthogonal complement is spanned
+by $x^{b-1}\psi_k$ (Proposition~\ref{prop:level} below). If $Q_k'\ge8K_1$, Lemma~\ref{lem:shape}(i) shows that
+$\tilde u_k$ has coordinates of one sign, all in $[\alpha(1-\frac17),\alpha(1+\frac17)]$, whence
+$c_k/a_k\ge3\cdot\frac{6/7}{8/7}>2$. Since $K_s\ge(2b/3)^{s-1}K_1\ge K_1$ by Proposition~\ref{prop:K}, we have
+$Q'_1=Q/\rho\ge8K_1$, and inductively $2\theta_{k+1}/\rho_{k+1}=(Q/2^{k}\rho)\prod_{j\le k}(c_j/a_j)\ge Q/\rho\ge8K_1$.
+\end{proof}
+
+\begin{proposition}[one level]\label{prop:level}
+Let $\varphi\in R_b$ with $\Nm(\varphi)\ne0$ and $L=\operatorname{span}\{x^i\varphi:0\le i\le b-2\}\subset\Z^b$. Then the
+vector of signed maximal minors of $L$ is $\pm x^{b-1}\adj(\bar\varphi)$; hence $L^\perp$ is spanned by
+$x^{b-1}\adj(\bar\varphi)$ and $[\sat L:L]=\cont\adj(\bar\varphi)$. Moreover
+\begin{align*}
+\cont\adj(\bar\varphi)=1&\iff \rank_{\F_p}(m_\varphi)\ge b-1\ \text{ for all primes }p\\
+&\iff \deg\gcd_{\F_p}(\varphi,x^b-1)\le1\ \text{ for all primes }p .
+\end{align*}
+\end{proposition}
+\begin{proof}
+The columns of $m_\varphi$ are $x^j\varphi$, $0\le j\le b-1$, so the minors of $L$ (delete row $i$) are the cofactors
+$C_{i,b-1}$ of $m_\varphi$; i.e.\ $w=\pm(\text{row }b-1\text{ of }\adj m_\varphi)=\pm\adj(m_\varphi)^{T}e_{b-1}
+=\pm\adj(m_{\bar\varphi})e_{b-1}=\pm x^{b-1}\adj(\bar\varphi)$, using $m_\varphi^T=m_{\bar\varphi}$ and the fact that
+$\adj(m_{\bar\varphi})$ is multiplication by $\adj(\bar\varphi)$. The content of $w$ is the index.
+For the equivalences: $\adj(M)\equiv0\pmod p$ iff all $(b-1)$-minors of $M$ vanish mod $p$ iff $\rank_{\F_p}M\le b-2$;
+and $\rank_{\F_p}m_\varphi=\rank_{\F_p}m_{\bar\varphi}=\dim_{\F_p}\bigl(\varphi\cdot\F_p[x]/(x^b-1)\bigr)=b-\deg\gcd_{\F_p}(\varphi,x^b-1)$,
+since the image of multiplication by $\varphi$ in the principal ideal ring $\F_p[x]/(x^b-1)$ is the ideal generated by
+$\gcd(\varphi,x^b-1)$.
+\end{proof}
+
+\begin{theorem}[normal vector]\label{thm:normal}
+Let $Q\ge8K_s\rho$ and let the level data be as in Definition~\ref{def:levels}. Then $L_s(Q,\rho)$ has rank $d-1$ and
+$L_s(Q,\rho)\subseteq R(u)$, where
+\[
+u:=\tilde u_1\otimes\dots\otimes\tilde u_s,\qquad u(x_1,\dots,x_s)=\prod_{k=1}^s\tilde u_k(x_k),
+\]
+is a primitive vector of $\Z^{d}$ with positive coordinates.
+\end{theorem}
+\begin{proof}
+Rank $d-1$: Lemma~\ref{lem:cube} for the real scale $Q/\rho>K_s$. Primitivity and positivity of $u$: the coordinates of
+$u$ are the products $\prod_k\tilde u_{k,i_k}$, positive by Lemma~\ref{lem:nondeg}, and the content of a tensor product
+of integer vectors is the product of the contents (Gauss's lemma), so $\cont u=1$.
+
+Orthogonality. Fix $(k,i,m)$. Since
+$\langle u,\ell_{k,i,m}\rangle=[x^0]\bigl(u\,\overline{\Phi_k}\,x_k^{-i}\bar m\bigr)=[x_k^im]\bigl(u\overline{\Phi_k}\bigr)$,
+it suffices to show that every monomial of $u\overline{\Phi_k}$ whose $x_1,\dots,x_{k-1}$-exponents vanish has
+$x_k$-exponent $b-1$. Now
+\begin{align*}
+u\overline{\Phi_k}={}&\frac{Q}{2^k}\prod_{j<k}\Bigl[\tilde u_j(x_j)(2+x_j^{-1})\Bigr]\cdot\tilde u_k(x_k)\bar\gpoly(x_k)\cdot\prod_{j>k}\tilde u_j(x_j)\\
+&+\rho\prod_{j<k}\Bigl[\tilde u_j(x_j)x_j^{-(b-1)}\Bigr]\cdot\tilde u_k(x_k)\cdot\prod_{j>k}\tilde u_j(x_j),
+\end{align*}
+a sum of two products of univariate factors. Extracting, for each $j<k$, the part with $x_j$-exponent $0$ amounts to
+replacing the $j$-th factor by its constant coefficient: $[x_j^0]\tilde u_j(2+x_j^{-1})=2\tilde u_{j,0}+\tilde u_{j,1}=c_j$ and
+$[x_j^0]\tilde u_jx_j^{-(b-1)}=[x_j^0]\tilde u_jx_j=\tilde u_{j,b-1}=a_j$. Hence the relevant part of $u\overline{\Phi_k}$ is
+\[
+\bigl(\theta_k\bar\gpoly(x_k)+\rho_k\bigr)\tilde u_k(x_k)\prod_{j>k}\tilde u_j
+=\overline{\varphi_k}\,\tilde u_k\prod_{j>k}\tilde u_j
+=\pm\frac{\Nm_k}{\gamma_k}\,x_k^{b-1}\prod_{j>k}\tilde u_j(x_j),
+\]
+by $\overline{\varphi_k}\psi_k=\Nm_k$. All its monomials have $x_k$-exponent $b-1$, as required.
+\end{proof}
+
+\begin{theorem}[index formula]\label{thm:index}
+Under the hypotheses of Theorem~\ref{thm:normal},
+\[
+[\,R(u):L_s(Q,\rho)\,]=\prod_{k=1}^{s}\gamma_k^{\,b^{s-k}} .
+\]
+In particular $L_s(Q,\rho)$ is primitive if and only if $\gamma_1=\dots=\gamma_s=1$.
+\end{theorem}
+\begin{proof}
+Induction on $s$. For $s=1$, $L_1(Q,\rho)=\operatorname{span}\{x^i\varphi_1\}$ and the index is $\gamma_1$ by
+Proposition~\ref{prop:level}. Let $s\ge2$, $d'=b^{s-1}$, and view $\Z^d=\Z^b\otimes\Z^{d'}$ with $x_1$ in the first factor.
+The family $k=1$ spans $L^{(1)}\otimes\Z^{d'}$ with $L^{(1)}=\operatorname{span}\{x_1^i\varphi_1\}$, whose orthogonal complement
+in $\R^b$ is $\R\tilde u_1$. For $k\ge2$ write $\Phi_k=(2+x_1)\otimes A_k+x_1^{b-1}\otimes B_k$ with
+$A_k=\frac{Q}{2^k}(1-x_k)\prod_{2\le j\le k}(2+x_j)$ and $B_k=\rho\prod_{2\le j<k}x_j^{b-1}$ in $R_{s-1}(x_2,\dots,x_s)$.
+Decompose $\R^b\otimes\R^{d'}=W\oplus W^\perp$ with $W=\tilde u_1^\perp\otimes\R^{d'}$ and
+$W^\perp=\R\tilde u_1\otimes\R^{d'}$, and identify $W^\perp$ with $\R^{d'}$ via $\tilde u_1/|\tilde u_1|_2\otimes y\mapsto y$.
+The projection of $\ell_{k,i,m}$ ($k\ge2$) onto $W^\perp$ is
+\[
+\frac{1}{|\tilde u_1|_2}\bigl(\langle\tilde u_1,2+x_1\rangle A_k+\langle\tilde u_1,x_1^{b-1}\rangle B_k\bigr)x_k^im
+=\frac{1}{|\tilde u_1|_2}\,(c_1A_k+a_1B_k)\,x_k^im ,
+\]
+and $c_1A_k+a_1B_k=\frac{c_1Q/2}{2^{k-1}}(1-x_k)\prod_{2\le j\le k}(2+x_j)+a_1\rho\prod_{2\le j<k}x_j^{b-1}$, so these
+projections form, up to the factor $1/|\tilde u_1|_2$, the basis of $L':=L_{s-1}(Q',\rho')$ with $Q'=c_1Q/2$ and
+$\rho'=a_1\rho$ in the variables $x_2,\dots,x_s$. The level data of $L'$ are $(\theta_2,\rho_2),\dots,(\theta_s,\rho_s)$:
+indeed $Q'/2=\theta_2$, $\rho'=\rho_2$, and the recursion is the same. By Lemma~\ref{lem:nondeg},
+$Q'/\rho'=(c_1/a_1)(Q/2\rho)\ge Q/\rho\ge8K_s\ge8K_{s-1}$, so the induction hypothesis applies to $L'$: its normal vector is
+$u'=\tilde u_2\otimes\dots\otimes\tilde u_s$ and $[R(u'):L']=\prod_{k\ge2}\gamma_k^{b^{s-k}}$.
+Since $L'$ has rank $d'-1$, the projection onto $W^\perp$ is injective on $L_{\ge2}:=\operatorname{span}\{\ell_{k,i,m}:k\ge2\}$;
+hence $L_s(Q,\rho)\cap W=L^{(1)}\otimes\Z^{d'}$, the projection of $L_s(Q,\rho)$ onto $W^\perp$ is $L'/|\tilde u_1|_2$, and
+\[
+\covol L_s(Q,\rho)=\covol(L^{(1)}\otimes\Z^{d'})\cdot\covol\bigl(L'/|\tilde u_1|_2\bigr)
+=\covol(L^{(1)})^{d'}\cdot\frac{\covol L'}{|\tilde u_1|_2^{\,d'-1}} ,
+\]
+where $\covol(L^{(1)}\otimes\Z^{d'})=\covol(L^{(1)})^{d'}$ because $L^{(1)}\otimes\Z^{d'}$ is the orthogonal direct sum
+of the $d'$ copies $L^{(1)}\otimes e_m$. As $u=\tilde u_1\otimes u'$ is primitive, $\covol R(u)=|u|_2=|\tilde u_1|_2|u'|_2$, so
+\[
+[R(u):L_s(Q,\rho)]=\frac{\covol L_s(Q,\rho)}{\covol R(u)}=\Bigl(\frac{\covol L^{(1)}}{|\tilde u_1|_2}\Bigr)^{d'}\frac{\covol L'}{|u'|_2}
+=\gamma_1^{\,d'}\prod_{k\ge2}\gamma_k^{\,b^{s-k}} .\qedhere
+\]
+\end{proof}
+
+\begin{proposition}[exceptional primes]\label{prop:badprimes}
+Let $n_b=\prod_{0<i<j<b}\Res_z\bigl(\frac{z^b-1}{z-1},1+z^i+z^j\bigr)$ and let $P_b$ be the set of odd primes dividing
+$b(2^b+1)n_b$. Then $n_b\ne0$, so $P_b$ is finite, and for $\varphi=\theta\gpoly+\rho$ with $\theta,\rho\in\Z$ and a prime $p$:
+\begin{enumerate}[label=(\alph*)]
+\item if $p\mid\gcd(\theta,\rho)$ then $\deg\gcd_{\F_p}(\varphi,x^b-1)=b$;
+\item if $p\mid\theta$ and $p\nmid\rho$ then $\deg\gcd_{\F_p}(\varphi,x^b-1)=0$;
+\item if $p=2$ and $\rho$ is odd then $\deg\gcd_{\F_2}(\varphi,x^b-1)=0$;
+\item if $p$ is odd, $p\notin P_b$ and $p\nmid\gcd(\theta,\rho)$, then $\deg\gcd_{\F_p}(\varphi,x^b-1)\le1$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+For roots of unity, $1+\zeta_1+\zeta_2=0$ forces $\{\zeta_1,\zeta_2\}=\{\omega,\bar\omega\}$, which is impossible in $\mu_b$
+because $3\nmid b$; hence every factor of $n_b$ is a nonzero integer. (a) and (b) are clear: $\varphi\equiv0$, respectively a
+nonzero constant, mod $p$. (c): if $\theta$ is even, $\varphi\equiv\rho\equiv1$; if $\theta$ is odd,
+$\varphi\equiv\gpoly+1\equiv1+x+x^2\pmod2$, whose roots are the primitive cube roots of unity, which are not $b$-th roots of
+unity because $3\nmid b$.
+(d): Let $\F=\overline{\F}_p$. Since $p\nmid b$, $x^b-1$ is separable over $\F$; fix a prime $\mathfrak p\mid p$ of
+$\Z[\zeta_b]$; reduction modulo $\mathfrak p$ maps $\mu_b$ bijectively onto the roots of $x^b-1$ in $\F$.
+As $x^b-1$ is squarefree over $\F$, $\deg\gcd_{\F_p}(\varphi,x^b-1)$ is the number of distinct common roots, so suppose
+$\zeta_1\ne\zeta_2$ are common roots. If $p\mid\theta$ then $p\nmid\rho$ and $\varphi\equiv\rho$ has no roots. So $p\nmid\theta$
+and $\gpoly(\zeta_1)=\gpoly(\zeta_2)=-\rho/\theta$; since $\gpoly(a)-\gpoly(c)=-(a-c)(1+a+c)$, we get $1+\zeta_1+\zeta_2=0$ in $\F$.
+If $\zeta_1,\zeta_2\ne1$, lifting to $\tilde\zeta_i\in\mu_b$ gives $\mathfrak p\mid(1+\tilde\zeta_1+\tilde\zeta_2)$; writing
+$\tilde\zeta_1=\eta^{i}$, $\tilde\zeta_2=\eta^{j}$ for a primitive $\eta\in\mu_b$, the algebraic integer $1+\eta^i+\eta^j$
+divides $\Res_z(\frac{z^b-1}{z-1},1+z^i+z^j)$, so $p\mid n_b$, a contradiction. If $\zeta_1=1$, then $\zeta_2=-2$, so
+$(-2)^b=1$ in $\F$, i.e.\ $p\mid2^b+1$, again a contradiction.
+\end{proof}
+
+\begin{theorem}[first level]\label{thm:A}
+Let $b\ge5$ be odd, $3\nmid b$, and let $q\ge4K_1$ be an integer with $\rad(P_b)\mid q$. Then $L_1(2q)$ is primitive.
+Its normal vector $\tilde u_1=\pm x^{b-1}\adj(\bar\varphi_1)$, $\varphi_1=q\gpoly+1$, has positive coordinates forming a
+$(2q-K_1)$-dissociated set with $\max\tilde u_1\le(2q)^{b-1}\Delta_{b,1}(1+5K_1/q)$, and for $2^l\le2q-K_1$ the lift
+$\{2^j\tilde u_{1,i}\}$ is a dissociated set of size $lb$ with $f(lb)\le\max\tilde u_1/2^{l(b-1)}$.
+\end{theorem}
+\begin{proof}
+By Proposition~\ref{prop:level} it suffices to check $\deg\gcd_{\F_p}(\varphi_1,x^b-1)\le1$ for all $p$. For odd $p\mid q$
+use (b); for odd $p\nmid q$ we have $p\notin P_b$ and $\gcd(q,1)=1$, so (d) applies; $p=2$ is (c). The remaining assertions
+are Lemmas~\ref{lem:cube} and \ref{lem:shape} with $K=K_1$, $Q=2q$, together with \eqref{eq:lift}.
+\end{proof}
+
+\begin{example}\label{ex:5}
+Let $b=5$ and $Q=16$, so $\varphi_1=8\gpoly+1=17-8x-8x^2$ and $\overline{\varphi_1}=17-8x^3-8x^4$. One finds
+\[
+\psi_1=\adj(\overline{\varphi_1})=62017+48704x+49792x^2+53704x^3+52104x^4,
+\]
+$\Nm_1=266321=11^2\cdot31\cdot71$, with $\psi_1\overline{\varphi_1}=266321$ in $R_5$, $\gamma_1=1$, and
+$\tilde u_1=x^4\psi_1=(48704,\,49792,\,53704,\,52104,\,62017)$. Here $K_1=424/55$, so Lemma~\ref{lem:cube} guarantees
+that the coordinates are $8$-dissociated (they are in fact $16$-dissociated but not $17$-dissociated, by brute force), and
+$\max\tilde u_1/Q^4=62017/65536\approx0.946$, compared with $\Delta_{5,1}=11/16$; the ratio tends to $\Delta_{5,1}$ as
+$Q\to\infty$, e.g.\ it is $0.6906$ for $Q=8200$. The lift with $l=3$ is the dissociated $15$-element set
+$\{\tilde u_{1,i},2\tilde u_{1,i},4\tilde u_{1,i}\}$. Finally $a_1=62017$ and $c_1=2\cdot48704+49792=147200$ are coprime,
+so the second level can be built on top of this one.
+\end{example}
+
+\section{Explicit dissociated sets}\label{sec:main}
+
+\begin{theorem}\label{thm:explicit}
+Let $b\ge5$ be odd with $3\nmid b$, $s\ge1$, $d=b^s$, $Q\in2^s\Z$ with $Q\ge8K_s$, and suppose that the level data of
+Definition~\ref{def:levels} (with $\rho=1$) satisfy $\gamma_1=\dots=\gamma_s=1$. Then $u=\tilde u_1\otimes\dots\otimes\tilde u_s$
+is a vector of $d$ positive integers whose coordinates are $(Q-K_s)$-dissociated, and
+\[
+\max u=\prod_{k=1}^s\max_i\tilde u_{k,i}\ \le\ Q^{d-1}\Delta_{b,s}\Bigl(1+\frac{10K_s}{Q}\Bigr).
+\]
+For every $l\ge1$ with $2^l\le Q-K_s$, the set $A=\{2^ju_i:0\le j<l,\ 1\le i\le d\}$ is dissociated, $|A|=ld$, and
+\[
+f(ld)\ \le\ \frac{\max u}{2^{l(d-1)}}\ \le\ \Delta_{b,s}\Bigl(1+\frac{10K_s}{Q}\Bigr)\Bigl(\frac{Q}{2^l}\Bigr)^{d-1}.
+\]
+\end{theorem}
+\begin{proof}
+Theorems~\ref{thm:normal} and \ref{thm:index} give $L_s(Q)=R(u)$; Lemma~\ref{lem:cube} with $K=K_s$
+(Proposition~\ref{prop:K}) gives $R(u)\cap\dcube{Q-K_s}^d=\{0\}$; Lemma~\ref{lem:shape}(ii) bounds $\max u$; the product
+formula holds because all $\tilde u_{k,i}>0$; finally apply \eqref{eq:lift}.
+\end{proof}
+
+The sizes $ld$ in Theorem~\ref{thm:explicit} form a sparse set. The following classical observation, used by Conway and
+Guy and by Bohman \cite{Bo98} to pass from one size to all larger sizes, fills the gaps at no cost.
+
+\begin{lemma}[monotonicity]\label{lem:mono}
+If $A$ is dissociated with $|A|=n$, then $2A\cup\{1\}$ is dissociated with $n+1$ elements and maximum $2\max A$.
+Consequently $f(n+1)\le f(n)$ for all $n\ge1$, and for every $m\ge n$ the explicit set
+$A_m=2^{m-n}A\cup\{1,2,\dots,2^{m-n-1}\}$ is dissociated with $|A_m|=m$ and $\max A_m/2^{m}=\max A/2^{n}$.
+\end{lemma}
+\begin{proof}
+The elements of $2A$ are even and $1$ is odd, so $2A\cup\{1\}$ has $n+1$ elements. If two subsets of $2A\cup\{1\}$ have
+the same sum, the two sums have the same parity, so either both subsets contain $1$ or neither does; removing $1$ and
+halving gives two subsets of $A$ with the same sum, hence the same subsets. The maximum is $2\max A$ because $\max A\ge1$,
+and $2\max A/2^{n}=\max A/2^{n-1}$; taking the infimum over $A$ gives $f(n+1)\le f(n)$, and iterating the construction
+$m-n$ times gives $A_m$.
+\end{proof}
+
+\begin{corollary}\label{cor:alln}
+Table~\ref{tab:main} and Lemma~\ref{lem:mono} give explicit dissociated sets $A$ of every size $n$ with
+\begin{align*}
+\max A&<0.158523\cdot2^{n}&&\text{for every } n\ge43\,923,\\
+\max A&<0.132535\cdot2^{n}&&\text{for every } n\ge1\,199\,562,\\
+\max A&<0.103036\cdot2^{n}&&\text{for every } n\ge3\,841\,966.
+\end{align*}
+In particular $f(n)\le0.206072$ for all $n\ge3\,841\,966$.
+\end{corollary}
+\begin{proof}
+The rows $(b,s)=(11,3)$, $(13,4)$ and $(17,4)$ of Table~\ref{tab:main} provide dissociated sets of sizes $43\,923$,
+$1\,199\,562$ and $3\,841\,966$ with $\max A/2^{|A|}$ below $0.158523$, $0.132535$ and $0.103036$ respectively
+(Theorem~\ref{thm:explicit} with the certificates of Section~\ref{sec:comp}); apply Lemma~\ref{lem:mono}.
+\end{proof}
+
+\subsection{An arithmetic progression of good scalings}\label{sec:AP}
+Write $Q=2^{s+1}t$ with $t\in\Z_{>0}$. Run the recursion of Definition~\ref{def:levels} formally, without dividing by
+contents and without sign normalisation: $\hat\theta_1=2^st$, $\hat\rho_1=1$,
+$\hat\varphi_k=\hat\theta_k\gpoly+\hat\rho_k$, $\hat\psi_k=\adj(\overline{\hat\varphi_k})$,
+$\hat a_k=\hat\psi_{k,0}$, $\hat c_k=2\hat\psi_{k,1}+\hat\psi_{k,2}$, $\hat\theta_{k+1}=2^{s-k}t\,\hat c_1\cdots\hat c_k$,
+$\hat\rho_{k+1}=\hat a_1\cdots\hat a_k$. All of these are polynomials in $t$ with integer coefficients (adjugates of matrices
+with entries in $\Z[t]$). If $\gamma_1=\dots=\gamma_k=1$ at a given $t$, then $\psi_j=\hat\psi_j$ for $j\le k$: the signs
+$\varepsilon_j$ enter $\theta_j$ and $\rho_j$ through the same product, so $\varphi_j=\pm\hat\varphi_j$, and $\adj$ is
+invariant under $\varphi\mapsto-\varphi$ because $b-1$ is even. Hence $a_j=\pm\hat a_j(t)$ and $c_j=\pm\hat c_j(t)$ with a
+common sign.
+
+\begin{definition}[the coprimality condition $H(b,s)$]\label{def:H}
+We say that $H(b,s)$ holds if for each $1\le k\le s-1$ the polynomials $\hat a_k,\hat c_k\in\Z[t]$ are coprime in $\Q[t]$;
+equivalently, $R_k:=\Res_t(\hat a_k,\hat c_k)\in\Z\setminus\{0\}$.
+\end{definition}
+
+\begin{theorem}\label{thm:AP}
+Assume $H(b,s)$ and put $M=\rad(P_b)\prod_{k<s}|R_k|$. If $t\equiv0\pmod M$ and $Q=2^{s+1}t\ge8K_s$, then
+$\gamma_1=\dots=\gamma_s=1$; that is, $L_s(Q)$ is primitive and Theorem~\ref{thm:explicit} applies.
+\end{theorem}
+\begin{proof}
+We show by induction on $k$ that level $k$ is primitive, i.e.\ $\deg\gcd_{\F_p}(\varphi_k,x^b-1)\le1$ for every prime $p$
+(Proposition~\ref{prop:level}), assuming that levels $j<k$ are primitive. Recall $\theta_k=2^{s+1-k}t\,c_1\cdots c_{k-1}$
+and $\rho_k=a_1\cdots a_{k-1}$.
+
+\emph{Claim:} for every prime $p\mid2t$ and every $j<k$, $p\nmid a_j$. Indeed $p\mid\theta_j$ (for $p=2$ because
+$2^{s+1-j}$ is even), so $\varphi_j\equiv\rho_j$ and $\psi_j\equiv\adj(\rho_j\cdot1)=\rho_j^{\,b-1}$ (a constant) mod $p$;
+as $\gamma_j=1$, $a_j=\pm\psi_{j,0}\equiv\pm\rho_j^{b-1}$, and $p\nmid\rho_j=a_1\cdots a_{j-1}$ by induction on $j$.
+
+\emph{Case $p\mid2t$.} Then $p\mid\theta_k$ and $p\nmid\rho_k$ by the claim, so Proposition~\ref{prop:badprimes}(b) applies.
+
+\emph{Case $p$ odd, $p\nmid t$.} Then $p\notin P_b$ because $\rad(P_b)\mid t$. By Proposition~\ref{prop:badprimes}(d) it
+suffices to show $p\nmid\gcd(\theta_k,\rho_k)$. Suppose $p\mid\theta_k$ and $p\mid\rho_k$; as $p\nmid2t$, $p\mid c_j$ for some
+$j<k$, and $p\mid a_{j'}$ for some $j'<k$. Choose such a pair with $j'$ minimal.
+If $j'>j$: $p\mid c_j\mid\theta_{j'}$, so as in the claim $a_{j'}\equiv\pm\rho_{j'}^{b-1}$ mod $p$, whence $p\mid\rho_{j'}$
+and $p\mid a_{j''}$ for some $j''<j'$, contradicting minimality. If $j'<j$: $p\mid a_{j'}\mid\rho_j$, and $p\nmid\theta_j$
+(else $\varphi_j\equiv0$ and level $j$ would not be primitive), so $\varphi_j\equiv\theta_j\gpoly$ and
+$\psi_j\equiv\theta_j^{\,b-1}\adj(\bar\gpoly)$ mod $p$. The circulant $m_{\bar\gpoly}$ has the simple eigenvalue $0$ with
+eigenvector $\one_b$, its other eigenvalues $\bar\gpoly(\zeta)$, $\zeta\ne1$, being nonzero mod $p$ (since $\gpoly(\zeta)=0$
+forces $\zeta=-2$, i.e.\ $p\mid2^b+1$); hence
+$\adj(m_{\bar\gpoly})=\prod_{\zeta\ne1}\bar\gpoly(\zeta)\cdot\frac1b\one_b\one_b^T=\frac{2^b+1}{3}\one_b\one_b^T$, because
+$\prod_{\zeta\ne1}(1-\zeta)=b$ and $\prod_{\zeta\ne1}(2+\zeta)=(2^b+1)/3$. Thus $\psi_j\equiv\theta_j^{b-1}\frac{2^b+1}{3}\sum_ix^i$
+and $c_j\equiv\pm\theta_j^{b-1}(2^b+1)\not\equiv0$ mod $p$, contradicting $p\mid c_j$.
+Hence $j'=j$: $p\mid\gcd(a_j,c_j)=\gcd(\hat a_j(t),\hat c_j(t))$, and since $\hat a_j,\hat c_j$ are coprime in $\Q[t]$ there are
+$A,B\in\Z[t]$ with $A\hat a_j+B\hat c_j=R_j$, so $p\mid R_j\mid M\mid t$, a contradiction.
+\end{proof}
+
+\begin{corollary}\label{cor:limsup}
+If $H(b,s)$ holds, then $\limsup_{l\to\infty}f(l\,b^s)\le\Delta_{b,s}$.
+\end{corollary}
+\begin{proof}
+For large $l$ choose $t\equiv0\pmod M$ with $Q=2^{s+1}t\in[2^l+K_s,\,2^l+K_s+2^{s+1}M]$. Theorems~\ref{thm:AP} and
+\ref{thm:explicit} give $f(ld)\le\Delta_{b,s}(1+10K_s/Q)(Q/2^l)^{d-1}\to\Delta_{b,s}$ as $l\to\infty$.
+\end{proof}
+
+\begin{corollary}\label{cor:numbers}
+$H(b,s)$ holds for the eight pairs $(5,2)$, $(7,2)$, $(11,2)$, $(13,2)$, $(5,3)$, $(7,3)$, $(11,3)$ and $(13,3)$
+(see Section~\ref{sec:comp}). Hence, unconditionally,
+\[
+\limsup_{l\to\infty}f(1331\,l)\le\Delta_{11,3}<0.31617,\qquad \limsup_{l\to\infty}f(2197\,l)\le\Delta_{13,3}<0.30299 ,
+\]
+and, since $f$ is nonincreasing (Lemma~\ref{lem:mono}), $\lim_{n\to\infty}f(n)\le\Delta_{13,3}$; in particular
+$f(n)<0.303$ for all sufficiently large $n$.
+\end{corollary}
+Corollary~\ref{cor:numbers} uses only the certificates $H(11,3)$ and $H(13,3)$ of Section~\ref{sec:comp}, item~6, and no
+large adjugate computation; the explicit sets of Table~\ref{tab:main} give the sharper effective statement
+$f(n)\le0.206072$ for all $n\ge3\,841\,966$ (Corollary~\ref{cor:alln}).
+
+\begin{conjecture}\label{conj:H}
+$H(b,s)$ holds for all odd $b\ge5$ with $3\nmid b$ and all $s\ge1$.
+\end{conjecture}
+
+\begin{theorem}[conditional rate]\label{thm:rate}
+Assume Conjecture~\ref{conj:H}. Then there is an absolute constant $c>0$ (one may take $c=1/20$) such that
+$f(n)\le n^{-c/\log\log n}$ for infinitely many $n$.
+\end{theorem}
+We only sketch the proof. The omitted details are height estimates for the adjugates $\hat\psi_k$ and for the resultants
+$R_k$ as polynomials in $t$; the numerical value of $c$ depends on them, the existence of some $c>0$ does not.
+\begin{proof}[Sketch]
+For $s\ge4$ let $b=b(s)$ be the least odd integer $\ge5$, not divisible by $3$, with $2^{-b}b^{s-1}\le\frac12$; then
+$b\le2s\log_2s$ and $\Delta_{b,s}\le e\,(2/3)^s$ by \eqref{eq:Delta}. Put $d=b^s$, so that
+$s\ge\log d/\log(2s\log_2s)\ge\log d/(2\log\log d)$ for large $s$. By Theorem~\ref{thm:AP} there is a good $Q$ in every
+interval $[X,X+2^{s+1}M]$ with $X\ge8K_s$, so we need to bound $\log M$. The polynomials $\hat a_k,\hat c_k$ have degree
+$D_k\le b^k\le d$ in $t$ and, by Hadamard's inequality for the adjugate and trivial bounds for products, height
+$\exp(O(d\,s\log b))$; hence $\log|R_k|\le2D_k\log(\text{height})+O(D_k\log D_k)=O(sd^2\log b)$ and
+$\log M=O(s^2d^2\log b)$. Taking $l=\lceil\log_2(2^{s+1}M+8K_s)\rceil+\lceil\log_2(200d)\rceil$ we get
+$(Q/2^l)^{d-1}(1+10K_s/Q)\le e^{1/100}$ and $n=ld\le d^4$ for large $d$, so $\log d\ge\frac14\log n$ and
+$\log\log d\le\log\log n$. Therefore
+$f(n)\le3(2/3)^{s}\le3\exp\bigl(-\log(3/2)\log d/(2\log\log d)\bigr)\le3\,n^{-\log(3/2)/(8\log\log n)}\le n^{-c/\log\log n}$
+with $c=1/20$, for all large $s$.
+\end{proof}
+
+\begin{corollary}\label{cor:rate-all}
+Assume Conjecture~\ref{conj:H}. Then $f(n)\le n^{-c'/\log\log n}$ for all sufficiently large $n$, with $c'=1/50$.
+\end{corollary}
+\begin{proof}
+For each large $s$ the proof of Theorem~\ref{thm:rate} produced a size $n_s=l_sd_s$ with $d_s=b(s)^s$, $n_s\le d_s^4$ and
+$f(n_s)\le3(2/3)^s$. Given a large $n$, let $s$ be maximal with $n_s\le n$. Then $n<n_{s+1}\le d_{s+1}^4$, so
+$\log n<4(s+1)\log b(s+1)\le8(s+1)\log(s+1)\le16\,s\log s$ for $s\ge3$, using $b(s+1)\le2(s+1)\log_2(s+1)$. Since
+$5^s\le d_s\le n$ we
+have $s<\log_2n$, hence $\log s\le1.1\log\log n$ and $s>\log n/(18\log\log n)$ for large $n$. By Lemma~\ref{lem:mono},
+\[
+f(n)\le f(n_s)\le3\,(2/3)^s\le3\exp\Bigl(-\frac{\log(3/2)\,\log n}{18\log\log n}\Bigr)\le n^{-1/(50\log\log n)}
+\]
+for all large $n$, because $\log(3/2)/18>0.0225>1/50$.
+\end{proof}
+
+\begin{remark}
+If good scalings $Q$ had positive density in $[X,2X]$, as the heuristics and all our experiments suggest, one could take
+$l=\log_2d+O(\log\log d)$ and the exponent would become $c=\log(3/2)-o(1)$, the value predicted by
+$\Delta_{b,s}\approx(2/3)^s$ with $s\approx\log d/\log\log d$.
+\end{remark}
+
+\section{Computations and certificates}\label{sec:comp}
+
+All computations use exact integer arithmetic (Python, with \texttt{sympy} for polynomial manipulations); the adjugate
+elements are computed by fraction-free Bareiss elimination, and every $\psi_k$ is checked against the identity
+$\psi_k\overline{\varphi_k}=\Nm_k$. The code and the certificate data are available with this paper
+(see the Acknowledgements).
+
+\begin{enumerate}[leftmargin=*]
+\item \emph{Correctness checks.} For $(b,s)\in\{(5,1),(5,2),(3,2),(7,2)\}$ and several $Q$ we built the basis of $L_s(Q)$
+explicitly, computed its vector of maximal minors directly, and verified that it equals
+$\pm\prod_k\gamma_k^{b^{s-k}}\cdot u$ with $u=\otimes_k\tilde u_k$, as predicted by Theorems~\ref{thm:normal} and
+\ref{thm:index} (for instance $(b,s)=(3,2)$, $Q=12$ gives $\gamma=(19,169)$ and index $19^3\cdot169$; the case $3\mid b$
+is not covered by our theorems but the algebra of Section~\ref{sec:tensor} still applies). The invariants $h_s$,
+$\covol(\Gamma_s)$ and $\Delta_{b,s}$ of Proposition~\ref{prop:closed} were verified numerically, and for $(b,s)=(3,2)$
+the conditions (A1)--(A2) were checked by exhaustive enumeration of $5.7\cdot10^6$ coefficient vectors.
+\item \emph{Brute-force dissociation.} The lifted sets of Theorem~\ref{thm:A} with $b=5$, $l\in\{3,4,5\}$ (for
+$Q=16,24,40$) and with $b=7$, $l=3$ (for $Q=24$), of sizes $15$, $20$, $25$ and $21$, as well as the $25$-element vectors
+$u=\tilde u_1\otimes\tilde u_2\in\Z^{25}$ of Definition~\ref{def:levels} for $(b,s)=(5,2)$ and $Q\in\{108,116,124\}$
+(scalings below the threshold $8K_2$ of Theorem~\ref{thm:explicit}, which therefore does not cover them), were verified to be dissociated by a
+meet-in-the-middle enumeration of all signed sums.
+\item \emph{Sharpness of Lemma~\ref{lem:cube}.} For $b=5$ and $Q\in\{16,24,40\}$ the coordinates of $\tilde u_1$ are in fact
+exactly $Q$-dissociated, whereas the lemma guarantees $Q-K_1\approx Q-7.7$. We do not know whether
+$L_s(Q)\cap\dcube Q^d=\{0\}$ holds in general; if it did, one could take $Q=2^l$ whenever $2^l$ is a good scaling, and the
+factor $(Q/2^l)^{d-1}$ in Theorem~\ref{thm:explicit} would disappear.
+\item \emph{Level criterion.} For $b\in\{5,7,9,11,13\}$ and $8\le q<40$ the criterion of Proposition~\ref{prop:level},
+evaluated by factoring $\Res(\varphi_1,x^b-1)$ and computing polynomial gcds mod $p$, agreed with the directly computed index
+in all $160$ cases. For $3\mid b$ the first level is never primitive: $\varphi_1(\omega)=3q+1$ for both primitive cube
+roots of unity $\omega$, so every prime factor of $3q+1$ is exceptional; this is why we assume $3\nmid b$.
+\item \emph{Theorem~\ref{thm:A}.} $P_5=\{3,5,11\}$, $P_7=\{3,7,43\}$, $P_{11}=\{3,11,23,683\}$; for $q=m\cdot\rad(P_b)$,
+$1\le m\le40$, the first level was primitive in all $120$ cases. The level-one polynomials satisfy
+$\hat a_1(q)=\Nm(q)-\frac qb\Nm'(q)$ with $\Nm(q)=\prod_{\zeta\ne1}(1+q\gpoly(\zeta))$, and
+$\Res_q(\hat a_1,\hat c_1)$ equals $2\cdot11\cdot19$, $2^3\cdot7\cdot43\cdot379$,
+$2\cdot3^5\cdot5^2\cdot23^3\cdot683\cdot14797$ and $3^3\cdot13\cdot53^3\cdot61\cdot2731\cdot626592619$ for $b=5,7,11,13$;
+the primes $19$ (for $b=5$) and $7$ (for $b=7$) are exactly the second-level failures observed at $Q=20$ and $Q=12$.
+\item \emph{Certification of $H(b,s)$.} If a non-constant $f\in\Z[t]$ divided both $\hat a_k$ and $\hat c_k$, then
+$f(t)\mid\gcd(\hat a_k(t),\hat c_k(t))$ for all $t\in\Z$, so $\gcd(\hat a_k(t),\hat c_k(t))=1$ would force $|f(t)|=1$, which is
+possible for at most $2\deg f\le2D_k$ integers $t$, where $D_k=(b-1)\deg\hat\theta_k$ bounds $\deg\hat a_k$. (Indeed
+$\deg\hat\rho_k<\deg\hat\theta_k$ by induction, so the leading form of $\adj(\overline{\hat\varphi_k})$ in $t$ is
+$\hat\theta_k^{\,b-1}\adj(\bar\gpoly)=\hat\theta_k^{\,b-1}\frac{2^b+1}{3}\sum_ix^i$, whence
+$\deg\hat a_k=\deg\hat c_k=(b-1)\deg\hat\theta_k$ and $\deg\hat\rho_{k+1}=\deg\hat\theta_{k+1}-1$.) We exhibited
+more than $2D_k$ integers $t$ (with levels $\le k$ primitive) and $\gcd(a_k,c_k)=1$, for each $k<s$ and each $(b,s)$ in
+Corollary~\ref{cor:numbers}; e.g.\ for $(11,3)$, $D_1=10$, $D_2=110$, and $246$, respectively $221$, good values of $t$
+occur among the first $426$. For $(5,2)$ and $(7,2)$ we also computed $\Res_t(\hat a_2,\hat c_2)\ne0$ directly ($297$ and
+$1319$ decimal digits).
+\item \emph{The table.} For each $(b,s)$ in Table~\ref{tab:main} we chose $l=\lceil\log_2(200(d-1)K_s)\rceil$, so that
+$(Q/2^l)^{d-1}\le e^{1/200}$, and the least $t$ with $Q=2^{s+1}t\ge2^l+K_s$ and $\gamma_1=\dots=\gamma_s=1$; at most three
+values of $t$ were needed in every case. For $(17,4)$ the four adjugates involve integers of about $3\cdot10^6$ bits.
+The column $f(n)$ is the exact rational $\max u/2^{l(d-1)}$ of Theorem~\ref{thm:explicit}, rounded up.
+\end{enumerate}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{rrrrrrccc}
+\toprule
+$b$ & $s$ & $d=b^s$ & $l$ & $n=ld$ & $Q$ & $f(n)\le$ & $\max A/2^n\le$ & $\Delta_{b,s}$\\
+\midrule
+5 & 1 & 5 & 13 & 65 & 8200 & 0.690649 & 0.345325 & 0.68750\\
+7 & 1 & 7 & 15 & 105 & 32784 & 0.674014 & 0.337007 & 0.67188\\
+11 & 1 & 11 & 16 & 176 & 65572 & 0.670804 & 0.335402 & 0.66699\\
+13 & 1 & 13 & 17 & 221 & 131120 & 0.669767 & 0.334884 & 0.66675\\
+5 & 2 & 25 & 19 & 475 & 524392 & 0.537132 & 0.268566 & 0.53457\\
+7 & 2 & 49 & 22 & 1078 & 4194584 & 0.474515 & 0.237258 & 0.47299\\
+11 & 2 & 121 & 25 & 3025 & 33555528 & 0.448812 & 0.224406 & 0.44706\\
+13 & 2 & 169 & 26 & 4394 & 67110656 & 0.447207 & 0.223604 & 0.44520\\
+5 & 3 & 125 & 25 & 3125 & 33555168 & 0.771242 & 0.385621 & 0.76915\\
+7 & 3 & 343 & 28 & 9604 & 268438368 & 0.463429 & 0.231715 & 0.46171\\
+11 & 3 & 1331 & 33 & 43923 & 8589952400 & 0.317045 & 0.158523 & 0.31617\\
+13 & 3 & 2197 & 34 & 74698 & 17179903936 & 0.304338 & 0.152169 & 0.30299\\
+17 & 3 & 4913 & 37 & 181781 & 137439055184 & 0.298073 & 0.149037 & 0.29699\\
+13 & 4 & 28561 & 42 & 1199562 & 4398047063424 & 0.265069 & 0.132535 & 0.26412\\
+17 & 4 & 83521 & 46 & 3841966 & 70368746289408 & 0.206072 & 0.103036 & 0.20556\\
+\bottomrule
+\end{tabular}
+\caption{Certified explicit dissociated sets $A$ of size $n=ld$ (Theorem~\ref{thm:explicit}). The set $A$ is the lift of
+$u=\otimes_k\tilde u_k$; $u$ is determined by $(b,s,Q)$ through Definition~\ref{def:levels}, and the certificate is
+$\gamma_1=\dots=\gamma_s=1$. The previous explicit record is $\max A\le0.22002\cdot2^{n}$ \cite{Bo98}.}
+\label{tab:main}
+\end{table}
+
+Table~\ref{tab:main} is read as follows. In every row the column $f(n)\le$ is within $0.6\%$ of $\Delta_{b,s}$ (the largest
+ratio, about $1.006$, occurs at $(11,1)$), so the losses from the finite $l$ and from the factor $1+10K_s/Q$ are negligible, and what a pair $(b,s)$ can achieve is
+essentially $\Delta_{b,s}$. Since the bound of Theorem~\ref{thm:explicit} is never below $\Delta_{b,s}>(2/3)^s$, no pair
+with $s\le2$ can certify $\max A/2^n<\frac12(2/3)^2=2/9$, let alone Bohman's $0.22002$; for $s=3$ one needs
+$2^{-b}b^2$ small, and $(7,3)$ still gives $0.2317$ while $(11,3)$ is the first pair below $0.22002$. Increasing $s$
+further requires $b$ to grow like $s\log_2s$ to keep $(1+2^{-b})^{(b^s-1)/(b-1)}$ bounded, which is the mechanism behind
+Theorem~\ref{thm:rate}; the price is the dimension $d=b^s$ of the vector and the height of the adjugates, about
+$3\cdot10^6$ bits for $(17,4)$. The certificate itself is always $s$ adjugates of $b\times b$ integer matrices, and each row
+was obtained with at most three trial values of $t$. No row is claimed to be optimal for its size; by
+Lemma~\ref{lem:mono}, every row is also an upper bound for $f(n)$ at all larger $n$ (Corollary~\ref{cor:alln}).
+
+\section{Remarks and open problems}\label{sec:remarks}
+
+\subsection{Sizes reached by the construction}
+Our sizes are multiples $ld$ of $d=b^s$ with $l\ge\log_2(dK_s)$; since numerically $K_1\approx0.26\,b^2$ and hence, by
+Proposition~\ref{prop:K}, $K_s=O(b^2d)$, they are of the form $n\approx2d\log_2d$ with $d=b^s$, a sparse set.
+Lemma~\ref{lem:mono} fills the gaps between consecutive sizes without any loss in $\max A/2^{|A|}$, and it is the only
+cheap way we know: three natural ways to reach other sizes \emph{inside} the construction all lose a factor exponential
+in the number of added elements.
+(i) If $A$ is dissociated with sum $S$, then $A\cup\{S+1\}$ is dissociated, but this multiplies $f$ by about $|A|/2$.
+(ii) Mixed lifts $\bigcup_i\{2^ju_i:j<l_i\}$ are dissociated as soon as $u$ is $2^{\max_il_i}$-dissociated, but if $r$
+coordinates use $l+1$ doublings the bound becomes $f(ld+r)\le2^{d-r}\Delta(1+o(1))$.
+(iii) A lift $B\cdot U$ by a dissociated set $B$ with $\sum B<Q$ has $|B||U|$ elements and loses the factor
+$(\sum B/2^{|B|})^{|U|-1}\ge1$, with equality only for $B=\{1,2,\dots,2^{l-1}\}$.
+Padding the lattice itself, from $V_d$ to $V_{d+1}$ via $\Lat^+=\{(\lambda+kv,-kh)\}$, gives an admissible pair but
+multiplies $\Delta$ by the height $h$. Two consequences of Lemma~\ref{lem:mono} deserve to be made explicit. First,
+together with the non-effective disproof it shows that $f(n)\to0$ along all $n$, not only along a subsequence. Second,
+the limit $\lim_{n\to\infty}f(n)$ exists, and each entry of Table~\ref{tab:main} is an explicit upper bound for it; the
+effective content of this paper is the rate at which these explicit bounds decrease (Theorem~\ref{thm:rate} and
+Corollary~\ref{cor:rate-all}).
+
+\subsection{The exponent and heights of admissible pairs}
+\begin{proposition}\label{prop:height}
+Let $(\Lat,v)$ be admissible in $\R^b$ with height $h$ and $\covol(\Gamma)=1+\eta$. Its $s$-fold tensor power
+(Proposition~\ref{prop:tensor}) is admissible in dimension $d=b^s$ with $\Delta\le(1+\eta)^{(b^s-1)/(b-1)}h^{-s}$.
+Conversely $\Delta\ge1/\sqrt b$ for every admissible pair in $\R^b$, so $h=\covol(\Gamma)/\Delta\le(1+\eta)\sqrt b$.
+\end{proposition}
+\begin{proof}
+The first part is Proposition~\ref{prop:tensor} iterated. For the second, (A1) says that $\Lat$ is a packing lattice for
+$\frac12\dcube1^b\cap V_b$, so Minkowski's theorem gives
+\[
+\covol(\Lat)\ge2^{-(b-1)}\operatorname{vol}_{b-1}\bigl(\dcube1^b\cap V_b\bigr)\ge1,
+\]
+the last inequality by Vaaler's cube slicing theorem \cite{Va79}; hence $\Delta=\covol(\Lat)/\sqrt b\ge b^{-1/2}$.
+\end{proof}
+In the base pair $h=3/2$ and $\eta=2^{-b}$; the exponent $c=\log(3/2)$ in $n^{-c/\log\log n}$ is $\log h$. An admissible
+pair in dimension $b$ with $h\ge b^{\alpha}$ and $\eta\le b^{-Cs}$ would give $\Delta\le2b^{-\alpha s}=2d^{-\alpha}$, i.e.\
+(given a primitivisation, and using Lemma~\ref{lem:mono} to pass to all $n$) $f(n)\le n^{-\alpha+o(1)}$, and by the
+proposition $\alpha\le\frac12$ is the natural limit, matching the Erd\H{o}s--Moser barrier $f(n)\gg n^{-1/2}$. We therefore
+pose:
+\begin{problem}
+Determine $h^*(b)=\sup\{h:(\Lat,v)\text{ admissible in }\R^b,\ \covol(\Gamma)\le1+2^{-b}\}$. Is $h^*(b)\to\infty$? Is
+$h^*(b)\ge b^{\alpha}$ for some $\alpha>0$?
+\end{problem}
+Any improvement of the height $3/2$, even to another constant, improves the constant $c$; by the proposition the question
+is equivalent to the existence of lattice packings of the central hyperplane section of the cube with density
+$\gg b^{\alpha-1/2}$ that also satisfy the ``real-$t$'' condition (A2).
+
+\subsection{Siegel's lemma}
+As noted in \cite{EP1}, and observed earlier by Schinzel and Aliev \cite{Al08}, if $C_d$ denotes the optimal constant in
+Siegel's lemma for one equation in $d$ unknowns (so that every nonzero $a\in\Z^d$ has a nonzero integer relation $x$
+with $|x|_\infty^{d-1}\le C_d|a|_\infty$; see \cite{BoVa83}), then $f(d)\ge C_d^{-1}$. Each vector $u$ of Theorem~\ref{thm:explicit} is an explicit integer vector of
+height at most $Q^{d-1}\Delta_{b,s}(1+10K_s/Q)$ all of whose nonzero integer relations $c$ satisfy $|c|_\infty\ge Q-K_s$,
+so it gives the explicit lower bound $C_d\ge(1-K_s/Q)^{d-1}/\bigl(\Delta_{b,s}(1+10K_s/Q)\bigr)$ for $d=b^s$; for example
+$C_{1331}\ge3.15$ and $C_{83521}\ge4.84$.
+
+\subsection*{Acknowledgements}
+The construction made explicit here is due to GPT-6 Astra as expounded by Thomas Bloom on \texttt{erdosproblems.com};
+this paper only supplies the effective primitivisation, the structural theorems and the computations.
+In accordance with the journal's Artificial Intelligence Policy, the author discloses that an AI assistant (Claude, by
+Anthropic, operated through the Cursor IDE) was used in developing the arguments, in implementing the computations and in
+drafting the text; the author has checked all proofs and computations and takes full responsibility for the content.
+The code and certificate data are available at [repository URL].
+
+\begin{thebibliography}{99}
+\bibitem{Al08} I.~Aliev. Siegel's lemma and sum-distinct sets. \emph{Discrete Comput.\ Geom.}, 39: 59--66, 2008. \doi{10.1007/s00454-008-9059-9}
+\bibitem{EP1} T.~F.~Bloom. Erd\H{o}s Problem \#1, \url{https://www.erdosproblems.com/1}; includes the proof exposition of the construction of GPT-6 Astra (last edited 3 September 2026). Accessed 4 September 2026.
+\bibitem{Bo96} T.~Bohman. A sum packing problem of Erd\H{o}s and the Conway--Guy sequence. \emph{Proc.\ Amer.\ Math.\ Soc.}, 124: 3627--3636, 1996. \doi{10.1090/S0002-9939-96-03653-2}
+\bibitem{Bo98} T.~Bohman. A construction for sets of integers with distinct subset sums. \emph{Electron.\ J.\ Combin.}, 5: Research Paper 3, 1998. \doi{10.37236/1341}
+\bibitem{BoVa83} E.~Bombieri and J.~Vaaler. On Siegel's lemma. \emph{Invent.\ Math.}, 73: 11--32, 1983. \doi{10.1007/BF01393823}
+\bibitem{CoGu68} J.~H.~Conway and R.~K.~Guy. Sets of natural numbers with distinct sums. \emph{Notices Amer.\ Math.\ Soc.}, 15: 345, 1968. See also R.~K.~Guy, \emph{Unsolved Problems in Number Theory}, 3rd ed., Springer, 2004, Problem C8.
+\bibitem{DFX21} Q.~Dubroff, J.~Fox, and M.~W.~Xu. A note on the Erd\H{o}s distinct subset sums problem. \emph{SIAM J.\ Discrete Math.}, 35: 322--324, 2021. \doi{10.1137/20M1385883}
+\bibitem{El86} N.~D.~Elkies. An improved lower bound on the greatest element of a sum-distinct set of fixed order. \emph{J.\ Combin.\ Theory Ser.\ A}, 41: 89--94, 1986. \doi{10.1016/0097-3165(86)90116-0}
+\bibitem{Er56} P.~Erd\H{o}s. Problems and results in additive number theory. In \emph{Colloque sur la Th\'eorie des Nombres, Bruxelles, 1955}, pages 127--137. Georges Thone, Li\`ege; Masson, Paris, 1956.
+\bibitem{Gu82} R.~K.~Guy. Sets of integers whose subsets have distinct sums. In \emph{Theory and Practice of Combinatorics}, North-Holland Math.\ Stud.\ 60 / Ann.\ Discrete Math.\ 12, pages 141--154. North-Holland, Amsterdam, 1982. \doi{10.1016/S0304-0208(08)73500-X}
+\bibitem{HoKa23} T.~Horesh and Y.~Karasik. Equidistribution of primitive lattices in $\R^n$. \emph{Q.\ J.\ Math.}, 74: 1253--1294, 2023. \doi{10.1093/qmath/haad008}
+\bibitem{Lu88} W.~F.~Lunnon. Integer sets with distinct subset-sums. \emph{Math.\ Comp.}, 50: 297--320, 1988. \doi{10.1090/S0025-5718-1988-0917837-5}
+\bibitem{St23} S.~Steinerberger. Some remarks on the Erd\H{o}s distinct subset sums problem. \emph{Int.\ J.\ Number Theory}, 19: 1783--1800, 2023. \doi{10.1142/S1793042123500860}
+\bibitem{Va79} J.~D.~Vaaler. A geometric inequality with applications to linear forms. \emph{Pacific J.\ Math.}, 83: 543--553, 1979. \doi{10.2140/pjm.1979.83.543}
+\end{thebibliography}
+
+\end{document}

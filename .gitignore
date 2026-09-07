@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX build products
+paper/**/*.aux
+paper/**/*.log
+paper/**/*.out
+paper/**/*.xdv
+paper/**/*.synctex.gz
+
+# Superseded drafts
+paper/ejc/ejc-main-draft-*
+
+# Third-party material not for redistribution (text copies of papers and web pages)
+literature/
+
+# Internal writing-workflow artifacts (PaperSpine) and their generators
+paper_rewriting_output/
+tools/write_rationale_matrix.py
+tools/fix_bank_format.py
+
+# Binaries
+tools/bin/
