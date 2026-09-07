@@ -22,3 +22,7 @@ tools/fix_bank_format.py
 
 # Binaries
 tools/bin/
+
+# Independent review working files (not part of the public release)
+reviews/
+
