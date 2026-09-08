@@ -5,11 +5,11 @@
 (B) Coprimality certificates for levels k = 1..s-1 by counting: if gcd(a_k(t), c_k(t)) = 1 for
     more than 2*deg_t(a_k) integers t (with levels 1..k primitive), then a_k, c_k are coprime
     polynomials, hence gcd(a_k(t),c_k(t)) divides a fixed nonzero resultant for every t.
-(C) Search small good Q for (b,s) in a list, and report the exact bound f(l d) = max(u)/2^{l(d-1)}.
+(C) Search small good Q and report a rational bound f(l d) <= max(u)/2^{l(d-1)}.
 """
 import sys
 from fractions import Fraction
-from math import gcd, log2
+from math import gcd
 from pathlib import Path
 
 import sympy as sp
@@ -17,6 +17,7 @@ import sympy as sp
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tensor import K_bound, delta, tensor_certificate  # noqa: E402
+from certificates import ceil_fraction, ceil_log2, upper_decimal  # noqa: E402
 
 
 def rad_P(b):
@@ -98,10 +99,10 @@ def part_C(b, s, l, Q0, max_tries=5000):
     K = K_bound(b, s)
     Delta = delta(b, s)
     if l is None:
-        # choose l so that the loss factor (Q/2^l)^(d-1) ~ exp((d-1)K/2^l) is at most e^{1/200}
-        l = int(log2(200 * (d - 1) * float(K))) + 1
+        # Initial target only; rounding/search may increase the final Q loss.
+        l = ceil_log2(200 * (d - 1) * K)
     base = 2 ** l + K
-    t0 = int(base // Q0) + 1
+    t0 = ceil_fraction(base / Q0)
     for t in range(t0, t0 + max_tries):
         Q = Q0 * t
         cert = tensor_certificate(b, s, Q)
@@ -109,8 +110,8 @@ def part_C(b, s, l, Q0, max_tries=5000):
             umax = cert.u_max()
             f_exact = Fraction(umax, 2 ** (l * (d - 1)))
             n = l * d
-            print(f"(b,s)=({b},{s}) d={d} l={l} n={n}: Q={Q} (t={t}, tries={t-t0+1}) K<={float(K):.1f} "
-                  f"Delta={float(Delta):.5f}  f(n) <= max(u)/2^(l(d-1)) = {float(f_exact):.6f}  "
+            print(f"(b,s)=({b},{s}) d={d} l={l} n={n}: Q={Q} (t={t}, tries={t-t0+1}) K={K} "
+                  f"Delta~{float(Delta):.5f}  f(n) <= {upper_decimal(f_exact)}  "
                   f"[max u has {len(str(umax))} digits]")
             return cert, f_exact
     print(f"(b,s)=({b},{s}) l={l}: no primitive Q found in {max_tries} tries")

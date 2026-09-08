@@ -6,9 +6,17 @@
 \usepackage{booktabs}
 \usepackage{enumitem}
 
-\dateline{TBD}{TBD}{TBD}
 \MSC{11B75, 11H06, 11H31, 11Y16}
 \Copyright{The author. Released under the CC BY license (International 4.0).}
+
+% Submission copy: publication dates, volume and DOI are assigned by the journal.
+% Keep the journal style file unchanged and identify this copy as a manuscript.
+\makeatletter
+\def\the@dateline{Manuscript, 8 September 2026\\[0.5ex]\copy@right}
+\renewcommand{\ps@plain}{%
+  \renewcommand{\@oddfoot}{\footnotesize Manuscript prepared for submission\hfil\thepage}}
+\makeatother
+\pagestyle{plain}
 
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -29,7 +37,7 @@
 \newcommand{\Lat}{\Lambda}
 \newcommand{\gpoly}{g}
 
-\title{Explicit dissociated sets from tensor lattices:\\ an effective form of the disproof of\\ Erd\H{o}s's distinct subset sums conjecture}
+\title{Explicit dissociated sets from tensor lattices:\\ primitivity certificates and improved constructions}
 
 \author{Zhiyu Liu}
 \authortext{}{Tianjin Medical University General Hospital, Tianjin Medical University, Tianjin, China (\email{07eb1f@gmail.com}).}
@@ -39,34 +47,24 @@
 \maketitle
 
 \begin{abstract}
-A finite set $A$ of positive integers is \emph{dissociated} if its $2^{|A|}$ subset sums are pairwise distinct.
-Erd\H{o}s conjectured in 1931 that $\max A\ge c\,2^{|A|}$ for an absolute constant $c>0$. Until 2026, every improvement of
-the trivial bound $\max A\le2^{|A|-1}$ came from an explicit construction: Conway and Guy (1968) reached $\max A<0.23513\cdot2^{|A|}$,
-Lunnon (1988) $0.22096\cdot2^{|A|}$, and Bohman (1998) $0.22002\cdot2^{|A|}$, in each case for all sufficiently large $|A|$.
-In September 2026 the conjecture was disproved by an iterated lattice construction (GPT-6 Astra, expounded by Bloom):
-for every $\varepsilon>0$ there are arbitrarily large $n$ and dissociated $A$ with $|A|=n$ and $\max A<\varepsilon2^n$.
-That argument is not effective as written: the passage from a lattice of rank $d-1$ to a primitive one goes through an
-equidistribution statement and extracts no lattice, constant or size $n$.
+A finite set of positive integers is \emph{dissociated} if its subset sums are pairwise distinct. We give explicit
+constructions from the tensor lattices underlying the recent disproof of Erd\H{o}s's distinct subset sums conjecture
+by GPT-6 Astra, as expounded by Bloom. A prescribed perturbation of a lattice in dimension $d=b^s$ has a normal vector
+factoring into $s$ vectors of length $b$. We prove an exact formula for its saturation index in terms of the contents
+(the gcds of the coefficients) of $s$ circulant adjugates, and characterise primitivity by polynomial gcds over prime
+fields. Thus large constructions
+can be certified through small matrices.
 
-We make the construction explicit. We describe the lattices in closed form inside
-$\Z[x_1,\dots,x_s]/(x_1^b-1,\dots,x_s^b-1)$, and we prove that adding suitable unit vectors to a basis of the scaled
-lattice produces an integer lattice whose normal vector is a tensor product $\tilde u_1\otimes\dots\otimes\tilde u_s$ of
-explicit vectors $\tilde u_k$ proportional to $x^{b-1}\adj(\overline{\varphi_k})$, where
-$\varphi_k=\theta_k(2+x)(1-x)+\rho_k$ are explicit ``level polynomials'' and $\adj$ is the adjugate in
-$\Z[x]/(x^b-1)$; the index of this lattice in its saturation is $\prod_k\cont(\adj\overline{\varphi_k})^{\,b^{s-k}}$, where
-$\cont$ denotes the content (the gcd of the coefficients).
-A level is primitive if and only if $\deg\gcd(\varphi_k,x^b-1)\le1$ over every prime field, and the exceptional primes
-divide either $\gcd(\theta_k,\rho_k)$ or a fixed integer depending only on $b$.
-We deduce an unconditional effective theorem for one level, and, for every $(b,s)$ satisfying a finite decidable
-coprimality condition (verified for eight pairs), an infinite arithmetic progression of good scalings and the bound
-$\limsup_{l\to\infty}f(l\,b^s)\le(1+2^{-b})^{(b^s-1)/(b-1)}(2/3)^s$, where $f(n)$ is the infimum of $\max A/2^{n-1}$
-over dissociated sets of size $n$.
-We give computer-certified explicit dissociated sets, for instance one with $|A|=43\,923$ and
-$\max A<0.15853\cdot2^{|A|}$ and one with $|A|=3\,841\,966$ and $\max A<0.10304\cdot2^{|A|}$; these are the first
-explicit sets below Bohman's constant. Since $f$ is nonincreasing (double every element and adjoin $1$), each
-of these bounds persists for every larger size, so that for instance $f(n)\le0.206072$ for all $n\ge3\,841\,966$.
-Under the coprimality conjecture the method yields $f(n)\le n^{-c/\log\log n}$ for all sufficiently large $n$.
-Finally we show that the exponent of decay is governed by the heights of admissible pairs of lattices.
+Exact integer computations give a dissociated set of size $n=43\,923$ with $\max A<0.158523\cdot2^n$, and one of size
+$n=3\,841\,966$ with $\max A<0.103037\cdot2^n$, improving Bohman's explicit constant $0.22002$. Each bound extends to
+every larger size by doubling and adjoining $1$.
+
+For every odd $b\ge5$ with $3\nmid b$, we prove that the relevant first-level resultant is nonzero. The proof reduces
+a hypothetical common root to a nonzero algebraic integer all of whose conjugates have absolute value less than $1$.
+This nonvanishing controls every tensor depth: the scalings $Q=2^{s+1}t$ are primitive whenever $t$ is a sufficiently
+large multiple of a modulus depending only on $b$. Explicit bounds on this modulus give the unconditional rate
+$f(n)\le n^{-1/(50\log\log n)}$ for all sufficiently large $n$, where $f(n)$ is the infimum of $\max A/2^{n-1}$ over
+dissociated sets of size $n$.
 \end{abstract}
 
 \section{Introduction}
@@ -91,20 +89,26 @@ record $\sqrt{2/\pi}$ being due to Elkies and Gleason (unpublished) and to Dubro
 $N\ge\binom{n}{\lfloor n/2\rfloor}$.
 
 In September 2026 the conjecture was \emph{disproved}: for every $\varepsilon>0$ there are arbitrarily large $n$ with
-$f(n)<\varepsilon$. The construction is due to the AI system GPT-6 Astra, and the disproof has been formally verified in
-Lean (see \cite{EP1}); we follow the exposition of Bloom \cite{EP1}, whose notation we adopt. The proof has two parts. The first is an elementary iterative construction of
-lattices $\Lat_s\subset V_d=\{x\in\R^d:\sum_ix_i=0\}$, $d=b^s$, which avoid the open unit cube and have small covolume.
-The second is the passage from $\Lat_s$ to an integer vector with dissociated coordinates: one needs a \emph{primitive}
-lattice $L=u^\perp\cap\Z^d$ close to $Q\Lat_s$, and its existence was derived from the equidistribution of primitive
-lattices in the space of lattices \cite{HoKa23}. Equidistribution theorems of this kind do come with explicit error terms,
-but the exposition uses the statement qualitatively: no lattice, constant or size $n$ is extracted, and the uniformity in
-the dimension that a rate would require is not addressed. Bloom remarks that an effective version ``could prove something
-like $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$''. We note in passing that, combined with the
-classical monotonicity of $f$ (Lemma~\ref{lem:mono}), the disproof gives $f(n)\to0$ along all $n$; what it does not
-provide is a single explicit set, an explicit size $n$, or an explicit rate.
+$f(n)<\varepsilon$. The proof was found by GPT-6 Astra and verified in Lean \cite{Ad26}. We adopt the lattice notation
+of Bloom's exposition \cite{EP1}. Its first step constructs lattices
+$\Lat_s\subset V_d=\{x\in\R^d:\sum_ix_i=0\}$, $d=b^s$, which avoid the open unit cube and have small covolume.
+Its second step approximates $Q\Lat_s$ by a primitive lattice $L=u^\perp\cap\Z^d$ and transfers this to dissociated
+integers. Bloom invokes primitive-lattice equidistribution for that step. Horesh and Karasik \cite{HoKa23} give
+quantitative error terms, but the exposition does not extract the dimension-dependent constants needed for a rate.
+
+The original formal proof already contains a different algebraic passage to primitive lattices. The module cited
+in \cite{Ad26} uses integral Smith-type diagonalisation, a saturated bidiagonal perturbation and explicit normal
+weights; its perturbation buffer is obtained for each fixed matrix. It does not state a quantitative bound on
+$n$ in terms of $\varepsilon$. Our contribution is a perturbation that retains the tensor coordinates: its normal
+vector and saturation index reduce to $s$ calculations in dimension $b$, with an explicit perturbation constant and
+local tests that yield the numerical constructions below. A new nonvanishing theorem for the first-level resultant
+then provides arithmetic progressions of primitive scalings at every depth, with a modulus whose size we control
+explicitly. This yields an unconditional effective decay rate for the tensor construction. The classical
+monotonicity lemma below already combines with the original disproof to give qualitative convergence
+$f(n)\to0$ along all $n$.
 
 \subsection{Results}
-This paper carries out the second step explicitly. Throughout, $b\ge5$ is odd with $3\nmid b$, $s\ge1$, $d=b^s$,
+We develop and certify the tensor-preserving perturbation just described. Throughout, $b\ge5$ is odd with $3\nmid b$, $s\ge1$, $d=b^s$,
 $R_s=\Z[x_1,\dots,x_s]/(x_1^b-1,\dots,x_s^b-1)\cong\Z^d$, $\gpoly(x)=(2+x)(1-x)=2-x-x^2$, and
 \begin{equation}\label{eq:Delta}
 \Delta_{b,s}:=\frac{(1+2^{-b})^{(b^s-1)/(b-1)}}{(3/2)^s}
@@ -128,7 +132,7 @@ $c_k=\langle\tilde u_k,2+x\rangle$, $\theta_{k+1}=2^{-(k+1)}Q\,c_1\cdots c_k$, $
 (Definition~\ref{def:levels}). The constant $K_s$ below is explicit (Proposition~\ref{prop:K}).
 
 \begin{theorem}[normal vector and index]\label{thm:main-structure}
-Let $Q\ge8K_s$. Then $L_s(Q)$ has rank $d-1$, its orthogonal complement is spanned by the primitive integer vector
+Let $Q\in2^s\Z$ with $Q\ge8K_s$. Then $L_s(Q)$ has rank $d-1$, its orthogonal complement is spanned by the primitive integer vector
 $u=\tilde u_1\otimes\dots\otimes\tilde u_s$, i.e.\ $u(x)=\prod_k\tilde u_k(x_k)$, all coordinates of $u$ are positive, and
 \[
  [\,\sat L_s(Q):L_s(Q)\,]=\prod_{k=1}^{s}\gamma_k^{\,b^{s-k}} .
@@ -162,50 +166,49 @@ Then the $d=b^s$ coordinates of $u$ are positive integers forming a $(Q-K_s)$-di
 For every $l$ with $2^l\le Q-K_s$ the set $A=\{2^ju_i\}$ is dissociated, $|A|=ld$, and $f(ld)\le\max u/2^{l(d-1)}$.
 \end{theorem}
 
-The certificate $\gamma_1=\dots=\gamma_s=1$ costs $s$ adjugate computations of $b\times b$ integer matrices, so it is
-cheap even when $d=b^s$ is in the tens of thousands. Table~\ref{tab:main} lists the outcomes; for example
+The certificate $\gamma_1=\dots=\gamma_s=1$ requires $s$ adjugate computations of $b\times b$ integer matrices; the
+integers grow with $d$, but a full $d\times d$ computation is avoided. Table~\ref{tab:main} lists the outcomes; for example
 \begin{align*}
- (b,s)=(11,3):\quad & n=43\,923,\qquad\ \ \max A<0.317045\cdot2^{n-1}=0.158523\cdot2^{n},\\
- (b,s)=(13,4):\quad & n=1\,199\,562,\quad\ \max A<0.265069\cdot2^{n-1}=0.132535\cdot2^{n},\\
- (b,s)=(17,4):\quad & n=3\,841\,966,\quad\ \max A<0.206072\cdot2^{n-1}=0.103036\cdot2^{n}.
+ (b,s)=(11,3):\quad & n=43\,923,\qquad\ \ \max A<0.158523\cdot2^{n},\\
+ (b,s)=(13,4):\quad & n=1\,199\,562,\quad\ \max A<0.132535\cdot2^{n},\\
+ (b,s)=(17,4):\quad & n=3\,841\,966,\quad\ \max A<0.103037\cdot2^{n}.
 \end{align*}
-To our knowledge these are the first explicit dissociated sets beating Bohman's constant $0.22002$. By
+These explicit dissociated sets improve Bohman's constant $0.22002$. By
 Lemma~\ref{lem:mono} each bound persists for all larger sizes: there are explicit dissociated sets with
-$\max A<0.158523\cdot2^{n}$ for every $n\ge43\,923$ and with $\max A<0.103036\cdot2^{n}$ for every $n\ge3\,841\,966$
+$\max A<0.158523\cdot2^{n}$ for every $n\ge43\,923$ and with $\max A<0.103037\cdot2^{n}$ for every $n\ge3\,841\,966$
 (Corollary~\ref{cor:alln}).
 
-\paragraph{Infinitely many good scalings.} Write $Q=2^{s+1}t$. Before contents are normalised, the level data
+\paragraph{Good scalings at every tensor depth.} Write $Q=2^{s+1}t$. Before contents are normalised, the level data
 $\hat a_k,\hat c_k$ are polynomials in $t$ with integer coefficients (Section~\ref{sec:AP}). Let $H(b,s)$ be the
 statement that $\hat a_k$ and $\hat c_k$ are coprime in $\Q[t]$ for $1\le k\le s-1$.
 
 \begin{theorem}\label{thm:AP-intro}
-Assume $H(b,s)$. There is an integer $M\ge1$ such that $L_s(2^{s+1}t)$ is primitive for every $t\equiv0\pmod M$ with
+For every allowed $b$ there is an integer $M_b\ge1$, independent of $s$, such that $L_s(2^{s+1}t)$ is primitive for every $t\equiv0\pmod {M_b}$ with
 $2^{s+1}t\ge8K_s$. Consequently $\limsup_{l\to\infty}f(l\,b^s)\le\Delta_{b,s}$.
 \end{theorem}
 
-$H(b,s)$ is a finite, decidable statement, and we have verified it for
-\[
-(b,s)\in\{(5,2),(7,2),(11,2),(13,2),(5,3),(7,3),(11,3),(13,3)\}
-\]
-(Section~\ref{sec:comp}); hence $\limsup_lf(1331\,l)\le\Delta_{11,3}<0.3162$ and $\limsup_lf(2197\,l)\le\Delta_{13,3}<0.303$
-unconditionally (Corollary~\ref{cor:numbers}). If $H(b,s)$ holds for all $(b,s)$ (Conjecture~\ref{conj:H}), the
-construction gives $f(n)\le n^{-c/\log\log n}$ for infinitely many $n$ with an explicit $c>0$ (Theorem~\ref{thm:rate},
-whose proof we only sketch), and then, by monotonicity, for all sufficiently large $n$ with a smaller explicit constant
-(Corollary~\ref{cor:rate-all}).
+The key step is Theorem~\ref{thm:base-coprime}: the first-level resultant $r_b$ of \eqref{eq:base-resultant} is nonzero
+for every allowed $b$. We then prove $H(b,s)$ at every depth by a homogeneous recursion
+(Proposition~\ref{prop:H-reduction}), and may take $M_b=\rad(P_b)|r_b|$. Thus, for example,
+$\limsup_lf(1331\,l)\le\Delta_{11,3}<0.31618$ and $\limsup_lf(2197\,l)\le\Delta_{13,3}<0.30299$ hold unconditionally.
+The explicit estimate $\log M_b\le4b^3$ gives
+$f(n)\le n^{-1/(20\log\log n)}$ for infinitely many $n$ (Theorem~\ref{thm:rate}), and
+$f(n)\le n^{-1/(50\log\log n)}$ for all sufficiently large $n$ (Corollary~\ref{cor:rate-all}). Both statements are
+proved in full in Section~\ref{sec:AP}.
 
-\paragraph{Two structural remarks.} The sizes $n=ld$ reached by the construction itself form a sparse set, and in
-Section~\ref{sec:remarks} we explain why the natural padding operations \emph{inside} the construction lose a factor
-exponential in the number of added elements; the gaps between consecutive sizes are filled by the classical doubling step
-(Lemma~\ref{lem:mono}) rather than by the lattice construction. We also show that the exponent of decay is governed by the \emph{height} of
-admissible pairs: an admissible pair in dimension $b$ with height $h\ge b^{\alpha}$ and covolume $1+O(b^{-Cs})$ would give
-$f(n)\le n^{-\alpha+o(1)}$, while heights are $O(\sqrt b)$ (Proposition~\ref{prop:height}).
+\paragraph{Sizes and heights.} The classical doubling step (Lemma~\ref{lem:mono}) fills gaps between the sizes $n=ld$
+without loss in the normalised maximum. Section~\ref{sec:remarks} records the exact costs of other padding and lifting
+operations. We also relate decay to the height of admissible pairs: a height $h\ge b^\alpha$ and sufficiently small
+excess covolume give a tensor covolume $O(d^{-\alpha})$. Transferring this to $f(n)\le n^{-\alpha+o(1)}$ requires
+quantitative control of primitivisation and of the available sizes, which we state explicitly there. Vaaler's theorem
+bounds the height by $O(\sqrt b)$ when the full lattice covolume is bounded (Proposition~\ref{prop:height}).
 
 \paragraph{Organisation.} Section~\ref{sec:lattices} recasts the lattices of \cite{EP1} in the polynomial model $R_s$,
 in which a cyclic shift of coordinates is multiplication by a variable, and proves the closed form.
 Section~\ref{sec:perturb} contains the two perturbation lemmas and the constant $K_s$. Section~\ref{sec:tensor} defines
 $L_s(Q)$ and proves Theorems~\ref{thm:main-structure}, \ref{thm:levels-intro} and \ref{thm:A-intro}.
 Section~\ref{sec:main} deduces Theorems~\ref{thm:explicit-intro} and \ref{thm:AP-intro}, the monotonicity lemma with its
-corollaries, and the conditional rate. Section~\ref{sec:comp} describes the computations behind Table~\ref{tab:main}, and
+corollaries, and the effective decay rate. Section~\ref{sec:comp} describes the computations behind Table~\ref{tab:main}, and
 Section~\ref{sec:remarks} discusses the sizes reached by the construction, the height problem and Siegel's lemma.
 
 \subsection{Notation and conventions}\label{sec:notation}
@@ -245,13 +248,68 @@ $\covol(\Gamma)=\covol(\Lat)\,h/\sqrt d$. We write $\Delta=\covol(\Lat)/\sqrt d=
 Conditions (A1)--(A2) imply $\Gamma\cap\dcube1^d=\{0\}$, hence $\covol(\Gamma)\ge1$ by Minkowski's theorem, so
 $\Delta\ge1/h$.
 
-\medskip\noindent\emph{The base pair.} Let $b\ge3$ be odd. Put
+\medskip\noindent\emph{The base pair.} Let $b\ge3$ be odd. Following \cite{EP1}, put
 \[
- \Lat_1=\tfrac12\gpoly\,R_b=\tfrac12(2+x)\,\bigl((1-x)R_b\bigr),\qquad v_1=\tfrac12(2+x).
+ \Lat_1=\tfrac12\gpoly R_b
+       =\tfrac12(2+x)\bigl((1-x)R_b\bigr),
+ \qquad v_1=\tfrac12(2+x).
 \]
-Since $(1-x)R_b=\Z^b\cap V_b$ and multiplication by $\frac12(2+x)$ is the map $M=I+\frac12P$ ($P$ the cyclic shift),
-this is exactly the base pair of \cite{EP1}: $h_1=3/2$, $\covol(\Gamma_1)=\det M=1+2^{-b}$,
-$\Delta_{b,1}=\frac23(1+2^{-b})$, and $(\Lat_1,v_1)$ is admissible (\cite{EP1}; the proof uses only that $b$ is odd).
+Identify $R_b$ with $\Z^b$, index coordinates by $0,\dots,b-1$, and let
+$M=I+\frac12P$, where $(Py)_i=y_{i-1}$ with subscripts taken modulo $b$.
+Then $(1-x)R_b=\Z^b\cap V_b$, so
+$\Lat_1=M(\Z^b\cap V_b)$ and $v_1=Me_0$.
+
+\begin{lemma}\label{lem:base-pair}
+The pair $(\Lat_1,v_1)$ is admissible. Its invariants are
+\[
+ h_1=\frac32,\qquad
+ \covol(\Gamma_1)=1+2^{-b},\qquad
+ \Delta_{b,1}=\frac23(1+2^{-b}).
+\]
+\end{lemma}
+\begin{proof}
+For every $y\in\R^b$,
+\[
+ \lVert My\rVert_\infty
+ \ge \lVert y\rVert_\infty-\tfrac12\lVert Py\rVert_\infty
+ =\tfrac12\lVert y\rVert_\infty.
+\]
+Thus $My\in(-1,1)^b$ implies $|y_i|<2$ for every $i$.
+
+For (A1), suppose $z\in\Z^b\cap V_b$ and $Mz\in(-1,1)^b$.
+Each $z_i$ belongs to $\{-1,0,1\}$. If $z_i=1$, the inequality
+$|z_i+z_{i-1}/2|<1$ forces $z_{i-1}=-1$; if $z_i=-1$, it forces
+$z_{i-1}=1$. Hence a nonzero coordinate would force alternating signs
+around the entire cycle, which is impossible because $b$ is odd.
+Therefore $z=0$.
+
+For (A2), suppose $t\in\R$, $z\in\Z^b\cap V_b$, and
+$tv_1-Mz\in(-1,1)^b$. Set $y=te_0-z$. Then $My\in(-1,1)^b$,
+the coordinates $y_1,\dots,y_{b-1}$ belong to $\{-1,0,1\}$, and
+$\sum_i y_i=t$.
+We first show $|y_0|<1$. If $y_0\ge1$, the coordinate-$0$ inequality
+forces $y_{b-1}=-1$. Applying the same sign rule successively backwards
+forces $y_1=1$, since $b-1$ is even. But then
+$y_1+y_0/2\ge3/2$, contradicting the coordinate-$1$ inequality.
+Replacing $y$ by $-y$ rules out $y_0\le-1$.
+
+If one of $y_1,\dots,y_{b-1}$ is zero, every following coordinate in
+this list is zero, since an integer $y_{i+1}$ satisfying
+$|y_{i+1}+0/2|<1$ must vanish. The nonzero coordinates in the list
+therefore form an initial alternating sequence. If this sequence is
+nonempty, its first sign is opposite to that of $y_0$, by
+$|y_1+y_0/2|<1$. Its sum is either $0$ or $y_1$. In the former case
+$|t|=|y_0|<1$; in the latter case $t=y_0+y_1$ also lies in $(-1,1)$.
+This includes the empty sequence and proves (A2) for every real $t$.
+
+Finally, $h_1=\langle Me_0,\one_b\rangle=3/2$, and
+$(\Z^b\cap V_b)\oplus\Z e_0=\Z^b$ gives $\Gamma_1=M\Z^b$.
+Since $b$ is odd,
+\[
+ \det M=1-(-1/2)^b=1+2^{-b}.
+\]
+The formula for $\Delta_{b,1}$ follows by dividing by $h_1$.
+\end{proof}
 
 \subsection{Tensor products of admissible pairs}
 \begin{proposition}\label{prop:tensor}
@@ -615,9 +673,10 @@ The sizes $ld$ in Theorem~\ref{thm:explicit} form a sparse set. The following cl
 Guy and by Bohman \cite{Bo98} to pass from one size to all larger sizes, fills the gaps at no cost.
 
 \begin{lemma}[monotonicity]\label{lem:mono}
-If $A$ is dissociated with $|A|=n$, then $2A\cup\{1\}$ is dissociated with $n+1$ elements and maximum $2\max A$.
+If $A$ is dissociated with $|A|=n\ge1$, then $2A\cup\{1\}$ is dissociated with $n+1$ elements and maximum $2\max A$.
 Consequently $f(n+1)\le f(n)$ for all $n\ge1$, and for every $m\ge n$ the explicit set
-$A_m=2^{m-n}A\cup\{1,2,\dots,2^{m-n-1}\}$ is dissociated with $|A_m|=m$ and $\max A_m/2^{m}=\max A/2^{n}$.
+$A_m=2^{m-n}A\cup\{2^j:0\le j<m-n\}$ is dissociated with $|A_m|=m$ and $\max A_m/2^{m}=\max A/2^{n}$
+(the added set is empty when $m=n$).
 \end{lemma}
 \begin{proof}
 The elements of $2A$ are even and $1$ is odd, so $2A\cup\{1\}$ has $n+1$ elements. If two subsets of $2A\cup\{1\}$ have
@@ -632,135 +691,510 @@ Table~\ref{tab:main} and Lemma~\ref{lem:mono} give explicit dissociated sets $A$
 \begin{align*}
 \max A&<0.158523\cdot2^{n}&&\text{for every } n\ge43\,923,\\
 \max A&<0.132535\cdot2^{n}&&\text{for every } n\ge1\,199\,562,\\
-\max A&<0.103036\cdot2^{n}&&\text{for every } n\ge3\,841\,966.
+\max A&<0.103037\cdot2^{n}&&\text{for every } n\ge3\,841\,966.
 \end{align*}
-In particular $f(n)\le0.206072$ for all $n\ge3\,841\,966$.
+In particular $f(n)\le0.206073$ for all $n\ge3\,841\,966$.
 \end{corollary}
 \begin{proof}
 The rows $(b,s)=(11,3)$, $(13,4)$ and $(17,4)$ of Table~\ref{tab:main} provide dissociated sets of sizes $43\,923$,
-$1\,199\,562$ and $3\,841\,966$ with $\max A/2^{|A|}$ below $0.158523$, $0.132535$ and $0.103036$ respectively
+$1\,199\,562$ and $3\,841\,966$ with $\max A/2^{|A|}$ below $0.158523$, $0.132535$ and $0.103037$ respectively
 (Theorem~\ref{thm:explicit} with the certificates of Section~\ref{sec:comp}); apply Lemma~\ref{lem:mono}.
 \end{proof}
 
 \subsection{An arithmetic progression of good scalings}\label{sec:AP}
-Write $Q=2^{s+1}t$ with $t\in\Z_{>0}$. Run the recursion of Definition~\ref{def:levels} formally, without dividing by
-contents and without sign normalisation: $\hat\theta_1=2^st$, $\hat\rho_1=1$,
-$\hat\varphi_k=\hat\theta_k\gpoly+\hat\rho_k$, $\hat\psi_k=\adj(\overline{\hat\varphi_k})$,
-$\hat a_k=\hat\psi_{k,0}$, $\hat c_k=2\hat\psi_{k,1}+\hat\psi_{k,2}$, $\hat\theta_{k+1}=2^{s-k}t\,\hat c_1\cdots\hat c_k$,
-$\hat\rho_{k+1}=\hat a_1\cdots\hat a_k$. All of these are polynomials in $t$ with integer coefficients (adjugates of matrices
-with entries in $\Z[t]$). If $\gamma_1=\dots=\gamma_k=1$ at a given $t$, then $\psi_j=\hat\psi_j$ for $j\le k$: the signs
-$\varepsilon_j$ enter $\theta_j$ and $\rho_j$ through the same product, so $\varphi_j=\pm\hat\varphi_j$, and $\adj$ is
-invariant under $\varphi\mapsto-\varphi$ because $b-1$ is even. Hence $a_j=\pm\hat a_j(t)$ and $c_j=\pm\hat c_j(t)$ with a
-common sign.
+Write $Q=2^{s+1}t$, where $t\in\Z_{>0}$. Run the recursion of Definition~\ref{def:levels}
+formally, without dividing by contents and without sign normalisation:
+\begin{gather*}
+\hat\theta_1=2^st,\qquad \hat\rho_1=1,\qquad
+\hat\varphi_k=\hat\theta_k\gpoly+\hat\rho_k,\qquad
+\hat\psi_k=\adj(\overline{\hat\varphi_k}),\\
+\hat a_k=[x^0]\hat\psi_k,\qquad
+\hat c_k=2[x^1]\hat\psi_k+[x^2]\hat\psi_k,\\
+\hat\theta_{k+1}=2^{s-k}t\prod_{j\le k}\hat c_j,\qquad
+\hat\rho_{k+1}=\prod_{j\le k}\hat a_j\qquad(1\le k<s).
+\end{gather*}
+All these quantities lie in $\Z[t]$. Equivalently,
+\begin{equation}\label{eq:formal-step}
+\hat\theta_{k+1}=\tfrac12\hat\theta_k\hat c_k,\qquad
+\hat\rho_{k+1}=\hat\rho_k\hat a_k.
+\end{equation}
+The product formula above shows integrality despite the factor $1/2$.
+If the first $k-1$ actual levels are primitive, then
+$(\theta_k,\rho_k)=\sigma_k(\hat\theta_k(t),\hat\rho_k(t))$ for a common sign
+$\sigma_k\in\{1,-1\}$. Indeed the signs chosen in Definition~\ref{def:levels} enter
+both products in the same way, and
+$\adj(-\varphi)=(-1)^{b-1}\adj(\varphi)=\adj(\varphi)$ since $b$ is odd.
+If level $k$ is primitive as well, then
+$(a_k,c_k)=\varepsilon_k(\hat a_k(t),\hat c_k(t))$ for another common sign.
 
 \begin{definition}[the coprimality condition $H(b,s)$]\label{def:H}
-We say that $H(b,s)$ holds if for each $1\le k\le s-1$ the polynomials $\hat a_k,\hat c_k\in\Z[t]$ are coprime in $\Q[t]$;
-equivalently, $R_k:=\Res_t(\hat a_k,\hat c_k)\in\Z\setminus\{0\}$.
+We say that $H(b,s)$ holds if, for every $1\le k<s$, the polynomials
+$\hat a_k,\hat c_k$ are coprime in $\Q[t]$; equivalently,
+$R_k:=\Res_t(\hat a_k,\hat c_k)\ne0$ for every $1\le k<s$.
+For $s=1$ the condition is empty.
 \end{definition}
 
-\begin{theorem}\label{thm:AP}
-Assume $H(b,s)$ and put $M=\rad(P_b)\prod_{k<s}|R_k|$. If $t\equiv0\pmod M$ and $Q=2^{s+1}t\ge8K_s$, then
-$\gamma_1=\dots=\gamma_s=1$; that is, $L_s(Q)$ is primitive and Theorem~\ref{thm:explicit} applies.
+The condition can in fact be checked at the first level alone. To see this, define
+homogeneous polynomials $\mathcal A_b,\mathcal C_b\in\Z[\theta,\rho]$ by
+\begin{align*}
+\mathcal A_b(\theta,\rho)
+&=[x^0]\adj(\theta\bar\gpoly+\rho),\\
+\mathcal C_b(\theta,\rho)
+&=2[x^1]\adj(\theta\bar\gpoly+\rho)+[x^2]\adj(\theta\bar\gpoly+\rho).
+\end{align*}
+Both have degree $b-1$. Put $\kappa_b=(2^b+1)/3\in\Z$.
+Since multiplication by $\bar\gpoly$ has kernel $\R\one_b$, its adjugate matrix is
+$\kappa_b\one_b\one_b^T$: the product of its nonzero eigenvalues is
+$b(2^b+1)/3$. Equivalently,
+$\adj(\bar\gpoly)=\kappa_b\sum_{i=0}^{b-1}x^i$ in $R_b$.
+Together with the adjugate of a scalar matrix, this gives the polynomial identities
+\begin{equation}\label{eq:homogeneous-boundaries}
+\begin{aligned}
+\mathcal A_b(0,\rho)&=\rho^{b-1},&
+\mathcal C_b(0,\rho)&=0,\\
+\mathcal A_b(\theta,0)&=\kappa_b\theta^{b-1},&
+\mathcal C_b(\theta,0)&=(2^b+1)\theta^{b-1}.
+\end{aligned}
+\end{equation}
+These identities hold over $\Z$, so they remain valid after reduction modulo a prime.
+Let
+\begin{equation}\label{eq:base-resultant}
+r_b:=\Res_q\bigl(\mathcal A_b(q,1),\mathcal C_b(q,1)\bigr)\in\Z.
+\end{equation}
+
+\begin{theorem}[nonvanishing of the base resultant]\label{thm:base-coprime}
+For every odd $b\ge5$ with $3\nmid b$, the polynomials
+$\mathcal A_b(q,1)$ and $\mathcal C_b(q,1)$ have no common complex root.
+Consequently $r_b\ne0$ for every such $b$.
 \end{theorem}
 \begin{proof}
-We show by induction on $k$ that level $k$ is primitive, i.e.\ $\deg\gcd_{\F_p}(\varphi_k,x^b-1)\le1$ for every prime $p$
-(Proposition~\ref{prop:level}), assuming that levels $j<k$ are primitive. Recall $\theta_k=2^{s+1-k}t\,c_1\cdots c_{k-1}$
-and $\rho_k=a_1\cdots a_{k-1}$.
+Put $\varphi=1+q\gpoly$ and write
+\[
+ \psi=\adj(\bar\varphi)=\sum_{i=0}^{b-1}\psi_i x^i.
+\]
+At $q=0$ we have $\psi=1$, so $\mathcal A_b(0,1)=1$.
+Suppose henceforth that $q\ne0$ and that
+\begin{equation}\label{eq:common-root-data}
+ \psi_0=0,\qquad 2\psi_1+\psi_2=0.
+\end{equation}
 
-\emph{Claim:} for every prime $p\mid2t$ and every $j<k$, $p\nmid a_j$. Indeed $p\mid\theta_j$ (for $p=2$ because
-$2^{s+1-j}$ is even), so $\varphi_j\equiv\rho_j$ and $\psi_j\equiv\adj(\rho_j\cdot1)=\rho_j^{\,b-1}$ (a constant) mod $p$;
-as $\gamma_j=1$, $a_j=\pm\psi_{j,0}\equiv\pm\rho_j^{b-1}$, and $p\nmid\rho_j=a_1\cdots a_{j-1}$ by induction on $j$.
+First, $\psi\ne0$, including when $\Nm(\varphi)=0$.
+Indeed, the values $\gpoly(\zeta)$ for $\zeta\in\mu_b$ are distinct.
+If $\zeta\ne\eta$ and $\gpoly(\zeta)=\gpoly(\eta)$, then
+\[
+ 0=-(\zeta-\eta)(1+\zeta+\eta),
+\]
+so $\zeta+\eta=-1$. Two unit complex numbers with this sum are the
+primitive cube roots of unity, contrary to $3\nmid b$.
+The eigenvalues of multiplication by $\bar\varphi$ are
+$1+q\gpoly(\zeta^{-1})$, $\zeta\in\mu_b$; thus at most one is zero.
+This matrix has rank at least $b-1$, and its adjugate is a nonzero
+circulant. Its first column, the coefficient vector of $\psi$, is
+therefore nonzero.
 
-\emph{Case $p\mid2t$.} Then $p\mid\theta_k$ and $p\nmid\rho_k$ by the claim, so Proposition~\ref{prop:badprimes}(b) applies.
+Set $\lambda=(1+2q)/q$, and extend the coefficients $\psi_i$
+periodically with period $b$. Extracting coefficients of $x^i$ in
+$\bar\varphi\psi=\Nm(\varphi)$ gives
+\begin{equation}\label{eq:common-root-recurrence}
+ \psi_{i+2}=\lambda\psi_i-\psi_{i+1}
+ \qquad(1\le i\le b-1).
+\end{equation}
+If $\psi_1=0$, then \eqref{eq:common-root-data} gives $\psi_2=0$,
+and the recurrence forces every coefficient to vanish, a
+contradiction. We may therefore put $y_i=\psi_i/\psi_1$. Then
+\[
+ y_1=1,\qquad y_2=-2,\qquad y_b=0,\qquad y_{b+1}=1.
+\]
 
-\emph{Case $p$ odd, $p\nmid t$.} Then $p\notin P_b$ because $\rad(P_b)\mid t$. By Proposition~\ref{prop:badprimes}(d) it
-suffices to show $p\nmid\gcd(\theta_k,\rho_k)$. Suppose $p\mid\theta_k$ and $p\mid\rho_k$; as $p\nmid2t$, $p\mid c_j$ for some
-$j<k$, and $p\mid a_{j'}$ for some $j'<k$. Choose such a pair with $j'$ minimal.
-If $j'>j$: $p\mid c_j\mid\theta_{j'}$, so as in the claim $a_{j'}\equiv\pm\rho_{j'}^{b-1}$ mod $p$, whence $p\mid\rho_{j'}$
-and $p\mid a_{j''}$ for some $j''<j'$, contradicting minimality. If $j'<j$: $p\mid a_{j'}\mid\rho_j$, and $p\nmid\theta_j$
-(else $\varphi_j\equiv0$ and level $j$ would not be primitive), so $\varphi_j\equiv\theta_j\gpoly$ and
-$\psi_j\equiv\theta_j^{\,b-1}\adj(\bar\gpoly)$ mod $p$. The circulant $m_{\bar\gpoly}$ has the simple eigenvalue $0$ with
-eigenvector $\one_b$, its other eigenvalues $\bar\gpoly(\zeta)$, $\zeta\ne1$, being nonzero mod $p$ (since $\gpoly(\zeta)=0$
-forces $\zeta=-2$, i.e.\ $p\mid2^b+1$); hence
-$\adj(m_{\bar\gpoly})=\prod_{\zeta\ne1}\bar\gpoly(\zeta)\cdot\frac1b\one_b\one_b^T=\frac{2^b+1}{3}\one_b\one_b^T$, because
-$\prod_{\zeta\ne1}(1-\zeta)=b$ and $\prod_{\zeta\ne1}(2+\zeta)=(2^b+1)/3$. Thus $\psi_j\equiv\theta_j^{b-1}\frac{2^b+1}{3}\sum_ix^i$
-and $c_j\equiv\pm\theta_j^{b-1}(2^b+1)\not\equiv0$ mod $p$, contradicting $p\mid c_j$.
-Hence $j'=j$: $p\mid\gcd(a_j,c_j)=\gcd(\hat a_j(t),\hat c_j(t))$, and since $\hat a_j,\hat c_j$ are coprime in $\Q[t]$ there are
-$A,B\in\Z[t]$ with $A\hat a_j+B\hat c_j=R_j$, so $p\mid R_j\mid M\mid t$, a contradiction.
+Let $r,w$ be the roots of $z^2+z-\lambda=0$, so $r+w=-1$.
+If $r=w=-1/2$, the unique sequence satisfying
+\eqref{eq:common-root-recurrence} and the given first two values is
+\[
+ y_i=(3i-2)(-1/2)^{i-1}\qquad(1\le i\le b+1).
+\]
+In particular $y_b\ne0$, a contradiction. If $r\ne w$, the same
+recurrence gives
+\[
+ y_i=\frac{(r-1)r^{i-1}-(w-1)w^{i-1}}{r-w}
+ \qquad(1\le i\le b+1).
+\]
+The equalities $y_b=0$ and $y_{b+1}=1$ imply, respectively, that
+$(r-1)r^{b-1}=(w-1)w^{b-1}$ and that their common value is $1$.
+Hence
+\begin{equation}\label{eq:common-root-units}
+ r^{b-1}(r-1)=1,\qquad w^{b-1}(w-1)=1,\qquad r+w=-1.
+\end{equation}
+
+These three identities are impossible. To see this, $r$ is a
+nonzero algebraic integer, being a root of the monic polynomial
+$z^b-z^{b-1}-1$, and $w=-1-r$ belongs to $\Q(r)$.
+For any embedding $\sigma:\Q(r)\hookrightarrow\C$, write
+$z=\sigma(r)$ and $v=\sigma(w)=-1-z$. The identities
+\eqref{eq:common-root-units} give
+\[
+ |z|^{b-1}|z-1|=|v|^{b-1}|v-1|=1.
+\]
+Writing $a=\operatorname{Re}z$, we also have
+\[
+ |v|^2-|z|^2=2a+1,\qquad
+ |v-1|^2-|z-1|^2=3(2a+1).
+\]
+If $a>-1/2$, both factors in the product for $v$ are strictly
+larger than the corresponding factors for $z$, which is
+impossible; if $a<-1/2$, the reverse inequalities give the same
+contradiction. Thus $a=-1/2$. In particular $|z-1|\ge3/2$, so
+\[
+ |\sigma(r)|^{b-1}\le\frac23<1
+\]
+for every embedding $\sigma$. The norm of $r$ is a nonzero integer,
+but the product of the absolute values of all its conjugates is
+strictly less than $1$, a final contradiction. Therefore
+\eqref{eq:common-root-data} cannot hold, proving the theorem.
+\end{proof}
+
+\begin{samepage}
+\begin{proposition}[coprimality at every depth]\label{prop:H-reduction}
+For every odd $b\ge5$ with $3\nmid b$, the condition $H(b,s)$ holds for every $s\ge1$.
+\end{proposition}
+\end{samepage}
+\begin{proof}
+By Theorem~\ref{thm:base-coprime}, $r_b\ne0$. The only common zero of $\mathcal A_b$ and $\mathcal C_b$ in $\C^2$
+is $(0,0)$. Indeed, if $\rho\ne0$, homogeneity would give a common zero
+$q=\theta/\rho$ of the two polynomials in \eqref{eq:base-resultant};
+if $\rho=0$ and $\theta\ne0$, then
+$\mathcal A_b(\theta,0)=\kappa_b\theta^{b-1}\ne0$.
+
+Consider the map
+\begin{equation}\label{eq:homogeneous-map}
+F_b(\theta,\rho)
+=\bigl(\tfrac12\theta\mathcal C_b(\theta,\rho),\,
+        \rho\mathcal A_b(\theta,\rho)\bigr).
+\end{equation}
+It sends every nonzero pair in $\C^2$ to a nonzero pair.
+When $\theta=0$ and $\rho\ne0$, its second coordinate is $\rho^b\ne0$;
+when $\rho=0$ and $\theta\ne0$, its first coordinate is
+$\tfrac12(2^b+1)\theta^b\ne0$.
+When both coordinates of the input are nonzero, a zero output would require
+$\mathcal A_b=\mathcal C_b=0$, which has just been excluded.
+
+For any $z\in\C$, the initial pair $(2^sz,1)$ is nonzero, and
+\eqref{eq:formal-step} iterates $F_b$.
+Thus, at every level,
+\[
+(\hat\theta_k(z),\hat\rho_k(z))\ne(0,0),\qquad
+(\hat a_k(z),\hat c_k(z))\ne(0,0).
+\]
+The polynomials $\hat a_k,\hat c_k$ have no common complex root and are therefore
+coprime in $\Q[t]$. This proves $H(b,s)$ for every $s$.
+\end{proof}
+
+We next make the finite set of congruence obstructions independent of $s$.
+As before, $\rad(P_b)$ denotes the product of the primes in the finite set $P_b$.
+By Theorem~\ref{thm:base-coprime}, the positive integer
+\begin{equation}\label{eq:uniform-modulus}
+M_b:=\rad(P_b)\,|r_b|
+\end{equation}
+is defined for every allowed $b$.
+
+\begin{lemma}[local avoidance]\label{lem:local-avoidance}
+Let $p$ be an odd prime such that $p\notin P_b$ and $p\nmid r_b$.
+Then $\mathcal A_b,\mathcal C_b$ have no common nonzero zero in
+$\overline{\F}_p^2$, and the map $F_b$ of \eqref{eq:homogeneous-map}, reduced
+modulo $p$, sends every nonzero pair to a nonzero pair.
+\end{lemma}
+\begin{proof}
+The Sylvester adjugate identity gives polynomials $U,V\in\Z[q]$ with
+\[
+U(q)\mathcal A_b(q,1)+V(q)\mathcal C_b(q,1)=r_b.
+\]
+After reduction modulo $p$, the right side is nonzero. Thus the two univariate
+polynomials have no common root, even if their degrees decrease after reduction.
+Homogeneity excludes a common zero with $\rho\ne0$.
+For $\rho=0$ and $\theta\ne0$, the value
+$\mathcal A_b(\theta,0)=\kappa_b\theta^{b-1}$ is nonzero: every prime divisor
+of $\kappa_b$ divides $2^b+1$ and is in $P_b$.
+
+The three cases in the proof of Proposition~\ref{prop:H-reduction} now apply
+over $\overline{\F}_p$. At $\theta=0$, the second coordinate of $F_b$ is
+$\rho^b$; at $\rho=0$, the first is $\tfrac12(2^b+1)\theta^b$.
+Both boundary values are nonzero when the input is nonzero, because
+$p\nmid2(2^b+1)$. With $\theta\rho\ne0$, a zero output would require a common
+zero of $\mathcal A_b,\mathcal C_b$.
+\end{proof}
+
+\begin{samepage}
+\begin{theorem}\label{thm:AP}
+Let $b\ge5$ be odd with $3\nmid b$, let $s\ge1$, and let $M_b$ be as in \eqref{eq:uniform-modulus}.
+If $t\equiv0\pmod {M_b}$ and $Q=2^{s+1}t\ge8K_s$, then
+$\gamma_1=\dots=\gamma_s=1$; hence $L_s(Q)$ is primitive and
+Theorem~\ref{thm:explicit} applies.
+The same modulus $M_b$ works for every $s\ge1$.
+\end{theorem}
+\end{samepage}
+\begin{proof}
+For $s=1$, write $Q=4t=2q$. Then $q=2t\ge4K_1$ and $\rad(P_b)\mid q$,
+so Theorem~\ref{thm:A} applies. Suppose henceforth that $s\ge2$.
+
+We first record properties of the formal recursion modulo each prime.
+If $p\mid2t$, then
+$\hat\theta_j=2^{s+1-j}t\prod_{i<j}\hat c_i$ is divisible by $p$ for every
+$1\le j\le s$; for $p=2$ this uses $s+1-j\ge1$.
+Starting with $\hat\rho_1=1$, \eqref{eq:homogeneous-boundaries} gives
+\[
+\hat a_j\equiv\hat\rho_j^{b-1}\not\equiv0\pmod p,
+\qquad
+\hat\rho_{j+1}=\hat\rho_j\hat a_j\not\equiv0\pmod p.
+\]
+Thus $\hat\rho_j$ is nonzero modulo $p$ at every level. This argument does not
+divide by $2$ in characteristic $2$.
+
+If $p\nmid2t$, then $p$ is odd, $p\notin P_b$ and $p\nmid r_b$, because
+$M_b\mid t$. The initial pair $(2^st,1)$ is nonzero modulo $p$.
+Lemma~\ref{lem:local-avoidance} and \eqref{eq:formal-step} show that
+$(\hat\theta_j(t),\hat\rho_j(t))$ is nonzero modulo $p$ for every $j$.
+
+Now induct on the actual level $k$, assuming $\gamma_j=1$ for $j<k$.
+The observation preceding Definition~\ref{def:H} gives
+$(\theta_k,\rho_k)=\pm(\hat\theta_k(t),\hat\rho_k(t))$ with a common sign.
+If $p\mid2t$, then $p\mid\theta_k$ and $p\nmid\rho_k$, so
+Proposition~\ref{prop:badprimes}(b) gives degree zero for the common gcd.
+For every remaining prime, $p\notin P_b$ and
+$p\nmid\gcd(\theta_k,\rho_k)$, so Proposition~\ref{prop:badprimes}(d)
+gives degree at most one. The level data are nondegenerate by
+Lemma~\ref{lem:nondeg}, since $Q\ge8K_s$.
+Proposition~\ref{prop:level} therefore gives $\gamma_k=1$, completing the induction.
 \end{proof}
 
 \begin{corollary}\label{cor:limsup}
-If $H(b,s)$ holds, then $\limsup_{l\to\infty}f(l\,b^s)\le\Delta_{b,s}$.
+Let $b\ge5$ be odd with $3\nmid b$, and let $s\ge1$. Then
+\[
+\limsup_{l\to\infty}f(l\,b^s)\le\Delta_{b,s}.
+\]
 \end{corollary}
 \begin{proof}
-For large $l$ choose $t\equiv0\pmod M$ with $Q=2^{s+1}t\in[2^l+K_s,\,2^l+K_s+2^{s+1}M]$. Theorems~\ref{thm:AP} and
-\ref{thm:explicit} give $f(ld)\le\Delta_{b,s}(1+10K_s/Q)(Q/2^l)^{d-1}\to\Delta_{b,s}$ as $l\to\infty$.
+Fix $b,s$ and the modulus $M_b$ of Theorem~\ref{thm:AP}. Put $W=2^{s+1}M_b$.
+For each sufficiently large $l$, choose
+\[
+Q=W\left\lceil\frac{2^l+K_s}{W}\right\rceil,
+\qquad 2^l+K_s\le Q<2^l+K_s+W.
+\]
+Then $Q\ge8K_s$ and Theorems~\ref{thm:AP} and \ref{thm:explicit} give
+\[
+f(l\,b^s)\le\Delta_{b,s}(1+10K_s/Q)(Q/2^l)^{b^s-1}
+\longrightarrow\Delta_{b,s}.
+\]
 \end{proof}
 
 \begin{corollary}\label{cor:numbers}
-$H(b,s)$ holds for the eight pairs $(5,2)$, $(7,2)$, $(11,2)$, $(13,2)$, $(5,3)$, $(7,3)$, $(11,3)$ and $(13,3)$
-(see Section~\ref{sec:comp}). Hence, unconditionally,
+In particular,
 \[
-\limsup_{l\to\infty}f(1331\,l)\le\Delta_{11,3}<0.31617,\qquad \limsup_{l\to\infty}f(2197\,l)\le\Delta_{13,3}<0.30299 ,
+\limsup_{l\to\infty}f(1331\,l)\le\Delta_{11,3}<0.31618,\qquad
+\limsup_{l\to\infty}f(2197\,l)\le\Delta_{13,3}<0.30299.
 \]
-and, since $f$ is nonincreasing (Lemma~\ref{lem:mono}), $\lim_{n\to\infty}f(n)\le\Delta_{13,3}$; in particular
+Since $f$ is nonincreasing, $\lim_{n\to\infty}f(n)\le\Delta_{13,3}$; hence
 $f(n)<0.303$ for all sufficiently large $n$.
 \end{corollary}
-Corollary~\ref{cor:numbers} uses only the certificates $H(11,3)$ and $H(13,3)$ of Section~\ref{sec:comp}, item~6, and no
-large adjugate computation; the explicit sets of Table~\ref{tab:main} give the sharper effective statement
-$f(n)\le0.206072$ for all $n\ge3\,841\,966$ (Corollary~\ref{cor:alln}).
+\begin{proof}
+Apply Corollary~\ref{cor:limsup} and Lemma~\ref{lem:mono}.
+The displayed numerical bounds follow from \eqref{eq:Delta}.
+\end{proof}
+Corollary~\ref{cor:numbers} requires only numerical evaluation of \eqref{eq:Delta}.
+The explicit sets of
+Table~\ref{tab:main} give the sharper effective statement
+$f(n)\le0.206073$ for all $n\ge3\,841\,966$ (Corollary~\ref{cor:alln}).
 
-\begin{conjecture}\label{conj:H}
-$H(b,s)$ holds for all odd $b\ge5$ with $3\nmid b$ and all $s\ge1$.
-\end{conjecture}
+We give quantitative bounds before deriving a rate. In what follows, $\log$
+denotes the natural logarithm, while $\log_2$ denotes the logarithm to base $2$.
 
-\begin{theorem}[conditional rate]\label{thm:rate}
-Assume Conjecture~\ref{conj:H}. Then there is an absolute constant $c>0$ (one may take $c=1/20$) such that
-$f(n)\le n^{-c/\log\log n}$ for infinitely many $n$.
+\begin{lemma}[height and perturbation bounds]\label{lem:AP-heights}
+For every allowed $b$, the modulus in \eqref{eq:uniform-modulus} satisfies
+\[
+\log M_b\le4b^3.
+\]
+For every $s\ge1$ and $d=b^s$, the constants of Proposition~\ref{prop:K} satisfy
+\[
+K_1\le\frac{2(b^2-1)}3,\qquad
+K_s\le5K_1d\le\frac{10}{3}b^2d.
+\]
+\end{lemma}
+\begin{proof}
+For an integer polynomial $P$, let $\|P\|_{\mathrm{coeff},1}$ be the sum of the
+absolute values of its coefficients. This norm is submultiplicative.
+Every entry in the matrix of multiplication by $q\bar\gpoly+1$ has this norm
+at most $3$. Expanding a $(b-1)\times(b-1)$ minor as a determinant gives
+\[
+\|\mathcal A_b(q,1)\|_{\mathrm{coeff},1},\quad
+\|\mathcal C_b(q,1)\|_{\mathrm{coeff},1}
+\le S_b:=3(b-1)!3^{b-1}.
+\]
+The extra factor $3$ allows for the linear combination defining $\mathcal C_b$.
+Both polynomials have degree $b-1$, since their leading coefficients are
+$\kappa_b$ and $2^b+1$, respectively, by \eqref{eq:homogeneous-boundaries}.
+Every row of their Sylvester matrix has Euclidean norm at most $S_b$.
+Hadamard's inequality therefore gives
+\begin{equation}\label{eq:base-resultant-height}
+\log|r_b|\le2(b-1)\log S_b\le2b^2\log(3b).
+\end{equation}
+
+Each factor in the definition of $n_b$ is a product, over $b-1$ complex roots
+of unity, of numbers of absolute value at most $3$. Since these resultants
+are nonzero integers by Proposition~\ref{prop:badprimes},
+\[
+\log\rad(P_b)\le\log b+\log(2^b+1)
++\binom{b-1}{2}(b-1)\log3.
+\]
+Combining this with \eqref{eq:base-resultant-height} gives
+\[
+\log M_b\le\log b+\log(2^b+1)
++\binom{b-1}{2}(b-1)\log3+2b^2\log(3b)\le4b^3
+\]
+for $b\ge5$. For the last inequality, one may use
+$\log b\le b$, $\log(2^b+1)\le b$, $\log(3b)\le b$ and $\log3<2$.
+
+For the bound on $K_1$, let $D_i\in V_b$ be the dual vectors to
+$e_i-e_{i+1}$, $0\le i\le b-2$. Directly,
+\[
+\|D_i\|_1=\frac{2(i+1)(b-i-1)}b,
+\qquad \sum_{i=0}^{b-2}\|D_i\|_1=\frac{b^2-1}{3}.
+\]
+The base basis is the image of this chain basis under $M=I+P/2$, where $P$ is
+the cyclic shift. This map and its inverse preserve $V_b$, so
+$b_i^*=M^{-T}D_i$. The convergent geometric series for $M^{-T}$ gives
+$\|M^{-T}\|_{1\to1}\le\sum_{j\ge0}2^{-j}=2$, proving the estimate for $K_1$.
+Finally, write $E_s=K_s/b^s$. The recurrence in Proposition~\ref{prop:K} gives
+\[
+E_s\le\left(\frac1b+\frac43\right)K_1+\frac23E_{s-1},\qquad E_1=K_1/b.
+\]
+Induction yields $E_s\le(4+3/b)K_1\le5K_1$, which proves the result.
+\end{proof}
+
+\begin{theorem}[effective decay rate]\label{thm:rate}
+$f(n)\le n^{-c/\log\log n}$ for infinitely many $n$, with $c=1/20$.
 \end{theorem}
-We only sketch the proof. The omitted details are height estimates for the adjugates $\hat\psi_k$ and for the resultants
-$R_k$ as polynomials in $t$; the numerical value of $c$ depends on them, the existence of some $c>0$ does not.
-\begin{proof}[Sketch]
-For $s\ge4$ let $b=b(s)$ be the least odd integer $\ge5$, not divisible by $3$, with $2^{-b}b^{s-1}\le\frac12$; then
-$b\le2s\log_2s$ and $\Delta_{b,s}\le e\,(2/3)^s$ by \eqref{eq:Delta}. Put $d=b^s$, so that
-$s\ge\log d/\log(2s\log_2s)\ge\log d/(2\log\log d)$ for large $s$. By Theorem~\ref{thm:AP} there is a good $Q$ in every
-interval $[X,X+2^{s+1}M]$ with $X\ge8K_s$, so we need to bound $\log M$. The polynomials $\hat a_k,\hat c_k$ have degree
-$D_k\le b^k\le d$ in $t$ and, by Hadamard's inequality for the adjugate and trivial bounds for products, height
-$\exp(O(d\,s\log b))$; hence $\log|R_k|\le2D_k\log(\text{height})+O(D_k\log D_k)=O(sd^2\log b)$ and
-$\log M=O(s^2d^2\log b)$. Taking $l=\lceil\log_2(2^{s+1}M+8K_s)\rceil+\lceil\log_2(200d)\rceil$ we get
-$(Q/2^l)^{d-1}(1+10K_s/Q)\le e^{1/100}$ and $n=ld\le d^4$ for large $d$, so $\log d\ge\frac14\log n$ and
-$\log\log d\le\log\log n$. Therefore
-$f(n)\le3(2/3)^{s}\le3\exp\bigl(-\log(3/2)\log d/(2\log\log d)\bigr)\le3\,n^{-\log(3/2)/(8\log\log n)}\le n^{-c/\log\log n}$
-with $c=1/20$, for all large $s$.
+\begin{proof}
+For each sufficiently large integer $s$, let $b=b(s)$ be the least odd integer
+not divisible by $3$ which is at least $2s\log_2s$.
+The gaps between consecutive positive integers congruent to $1$ or $5$ modulo
+$6$ are at most $4$, so
+\[
+2s\log_2s\le b\le2s\log_2s+4\le s^2
+\]
+for all sufficiently large $s$. Consequently
+$2^{-b}b^{s-1}\le s^{-2s}s^{2s-2}=s^{-2}\le1/2$.
+With $d=b^s$, this implies
+\[
+\log\bigl(\Delta_{b,s}(3/2)^s\bigr)
+=\frac{b^s-1}{b-1}\log(1+2^{-b})
+\le\frac{b}{b-1}\,2^{-b}b^{s-1}<1,
+\]
+and hence $\Delta_{b,s}\le e(2/3)^s$.
+
+Put $W=2^{s+1}M_b$ and choose
+\begin{equation}\label{eq:rate-choice}
+l=\left\lceil\log_2(W+8K_s)\right\rceil
++\left\lceil\log_2(200d)\right\rceil,\qquad
+Q=W\left\lceil\frac{2^l+K_s}{W}\right\rceil.
+\end{equation}
+Thus $2^l\ge200d(W+8K_s)$ and
+$2^l+K_s\le Q<2^l+K_s+W$. In particular, $Q\ge8K_s$ and $Q/2^{s+1}$ is a
+multiple of $M_b$. Theorem~\ref{thm:AP} certifies all levels as primitive.
+The complete loss, including rounding to the progression, satisfies
+\begin{align*}
+\log\left((Q/2^l)^{d-1}(1+10K_s/Q)\right)
+&\le\frac{(d-1)(K_s+W)+10K_s}{2^l}\\
+&\le\frac{d(W+8K_s)}{2^l}\le\frac1{200}.
+\end{align*}
+Here the middle inequality holds for $d\ge2$.
+Theorem~\ref{thm:explicit} therefore produces a set of size $n_s=ld$ with
+\begin{equation}\label{eq:rate-sequence}
+f(n_s)\le e^{1+1/200}(2/3)^s<3(2/3)^s.
+\end{equation}
+
+Lemma~\ref{lem:AP-heights} gives
+$\log_2W\le s+1+4b^3/\log2$ and
+$\log_2K_s\le\log_2(10/3)+2\log_2b+\log_2d$.
+It follows directly from \eqref{eq:rate-choice} that
+\[
+l=O(b^3+s+\log d).
+\]
+Since $b\le s^2$ and $\log d=s\log b\le2s\log s$, this upper bound is a fixed
+polynomial in $s$, whereas $d\ge5^s$.
+In particular, for all sufficiently large $s$,
+\begin{equation}\label{eq:rate-size}
+d\le n_s=ld\le d^4.
+\end{equation}
+All constants here are absolute, and the displayed estimates give effective
+upper bounds for the parameter choices.
+
+As $\log b\le2\log s\le2\log\log d$, we have
+$s\ge\log d/(2\log\log d)$.
+Combining \eqref{eq:rate-sequence} and \eqref{eq:rate-size} yields
+\[
+f(n_s)\le3\exp\left(-\frac{\log(3/2)\log d}{2\log\log d}\right)
+\le3\,n_s^{-\log(3/2)/(8\log\log n_s)}
+\le n_s^{-1/(20\log\log n_s)}
+\]
+for all sufficiently large $s$, because $\log(3/2)/8>1/20$.
+Finally, $n_s\ge5^s$ tends to infinity, so these inequalities supply infinitely
+many distinct sizes.
 \end{proof}
 
 \begin{corollary}\label{cor:rate-all}
-Assume Conjecture~\ref{conj:H}. Then $f(n)\le n^{-c'/\log\log n}$ for all sufficiently large $n$, with $c'=1/50$.
+$f(n)\le n^{-c'/\log\log n}$ for all sufficiently large $n$, with $c'=1/50$.
 \end{corollary}
 \begin{proof}
-For each large $s$ the proof of Theorem~\ref{thm:rate} produced a size $n_s=l_sd_s$ with $d_s=b(s)^s$, $n_s\le d_s^4$ and
-$f(n_s)\le3(2/3)^s$. Given a large $n$, let $s$ be maximal with $n_s\le n$. Then $n<n_{s+1}\le d_{s+1}^4$, so
-$\log n<4(s+1)\log b(s+1)\le8(s+1)\log(s+1)\le16\,s\log s$ for $s\ge3$, using $b(s+1)\le2(s+1)\log_2(s+1)$. Since
-$5^s\le d_s\le n$ we
-have $s<\log_2n$, hence $\log s\le1.1\log\log n$ and $s>\log n/(18\log\log n)$ for large $n$. By Lemma~\ref{lem:mono},
+For each sufficiently large $s$, use the size $n_s$ produced above.
+Given large $n$, choose $s$ maximal with $n_s\le n$.
+Such an $s$ exists and is finite, because $n_s\ge5^s$; no monotonicity of the
+sequence $(n_s)$ is needed. By maximality,
+$n<n_{s+1}\le d_{s+1}^4$. Hence, for all sufficiently large $s$,
 \[
-f(n)\le f(n_s)\le3\,(2/3)^s\le3\exp\Bigl(-\frac{\log(3/2)\,\log n}{18\log\log n}\Bigr)\le n^{-1/(50\log\log n)}
+\log n<4(s+1)\log b(s+1)
+\le8(s+1)\log(s+1)\le16s\log s.
 \]
-for all large $n$, because $\log(3/2)/18>0.0225>1/50$.
+On the other hand, $n\ge n_s\ge5^s$ implies
+$\log\log n\ge\log s+\log\log5>\log s$.
+Thus $s>\log n/(16\log\log n)$.
+Lemma~\ref{lem:mono} and \eqref{eq:rate-sequence} give
+\[
+f(n)\le f(n_s)<3(2/3)^s
+\le3\exp\left(-\frac{\log(3/2)\log n}{16\log\log n}\right)
+\le n^{-1/(50\log\log n)}
+\]
+for all sufficiently large $n$, since $\log(3/2)/16>1/50$.
 \end{proof}
 
-\begin{remark}
-If good scalings $Q$ had positive density in $[X,2X]$, as the heuristics and all our experiments suggest, one could take
-$l=\log_2d+O(\log\log d)$ and the exponent would become $c=\log(3/2)-o(1)$, the value predicted by
-$\Delta_{b,s}\approx(2/3)^s$ with $s\approx\log d/\log\log d$.
-\end{remark}
+The progression in Theorem~\ref{thm:AP} supplies the specific gap bound $W$
+used in \eqref{eq:rate-choice}. This controls the distance from a good scaling
+to $2^l+K_s$, which is the quantity needed for the lifting estimate.
+The constants $1/20$ and $1/50$ retain substantial slack in the size estimates.
 
 \section{Computations and certificates}\label{sec:comp}
 
-All computations use exact integer arithmetic (Python, with \texttt{sympy} for polynomial manipulations); the adjugate
-elements are computed by fraction-free Bareiss elimination, and every $\psi_k$ is checked against the identity
-$\psi_k\overline{\varphi_k}=\Nm_k$. The code and the certificate data are available with this paper
-(see the Acknowledgements).
+The algebraic certificates use exact integers and rational numbers in Python, with \texttt{sympy} for symbolic
+polynomial and matrix calculations. Floating-point quantities are used only for exploratory checks and displays
+explicitly marked as approximations. The table generator computes circulant adjugates by the Cayley--Hamilton
+identity; small cases are compared with fraction-free Bareiss elimination and direct symbolic adjugates.
+
+Every one of the fifteen rows has a compressed exact witness. For each level the witness stores $\theta,\rho$, the
+determinant, and the first two coefficients of $\psi=\adj(\bar\varphi)$, from which every other coefficient is exactly
+reconstructible. Writing $a=2\theta+\rho$, the independent verifier works backwards through
+\[
+a\psi_i=\theta(\psi_{i+1}+\psi_{i+2})\qquad(1\le i<b),
+\]
+with subscripts modulo $b$, and checks every division and the cyclic closure. It independently computes
+\[
+T_0=2,\quad T_1=-\theta,\quad T_j=-\theta T_{j-1}+a\theta T_{j-2},\qquad
+\Nm(\varphi)=a^b+T_b-\theta^b.
+\]
+Indeed, if $r_1,r_2$ are the roots of $\theta z^2+\theta z-a$, then
+$T_j=\theta^j(r_1^j+r_2^j)$, and taking the product over the $b$th roots of unity gives this determinant formula for
+odd $b$. Finally the verifier checks $a\psi_0-\theta(\psi_1+\psi_2)=\Nm(\varphi)\ne0$; thus it fixes the scale of the
+adjugate as well as its direction. It then reconstructs the tensor maximum, checks every content and the theorem's
+inequalities, and verifies the decimal upper bounds. Full SHA-256 digests identify the witness files and the
+reconstructed integers. The data are in \texttt{results/certificates.json} and \texttt{results/witnesses/}; run
+\texttt{python tools/verify\_certificates.py} from the repository root to check all rows independently of the
+production adjugate implementation. The repository is linked in the Acknowledgements.
 
 \begin{enumerate}[leftmargin=*]
 \item \emph{Correctness checks.} For $(b,s)\in\{(5,1),(5,2),(3,2),(7,2)\}$ and several $Q$ we built the basis of $L_s(Q)$
@@ -768,13 +1202,17 @@ explicitly, computed its vector of maximal minors directly, and verified that it
 $\pm\prod_k\gamma_k^{b^{s-k}}\cdot u$ with $u=\otimes_k\tilde u_k$, as predicted by Theorems~\ref{thm:normal} and
 \ref{thm:index} (for instance $(b,s)=(3,2)$, $Q=12$ gives $\gamma=(19,169)$ and index $19^3\cdot169$; the case $3\mid b$
 is not covered by our theorems but the algebra of Section~\ref{sec:tensor} still applies). The invariants $h_s$,
-$\covol(\Gamma_s)$ and $\Delta_{b,s}$ of Proposition~\ref{prop:closed} were verified numerically, and for $(b,s)=(3,2)$
-the conditions (A1)--(A2) were checked by exhaustive enumeration of $5.7\cdot10^6$ coefficient vectors.
-\item \emph{Brute-force dissociation.} The lifted sets of Theorem~\ref{thm:A} with $b=5$, $l\in\{3,4,5\}$ (for
+$\covol(\Gamma_s)$ and $\Delta_{b,s}$ of Proposition~\ref{prop:closed} were verified numerically. For $(b,s)=(3,2)$,
+enumeration of $7^8=5\,764\,801$ coefficient vectors found no nonzero point violating (A1) in the chosen finite box,
+and no violation of (A2) at the three tested real parameters $t=1,5/4,3/2$ in that box. These finite checks do not
+replace the proofs of Lemma~\ref{lem:base-pair} and Proposition~\ref{prop:tensor}, which apply to every real $t$.
+\item \emph{Brute-force dissociation.} The vectors of Definition~\ref{def:levels}, lifted with $b=5$, $l\in\{3,4,5\}$ (for
 $Q=16,24,40$) and with $b=7$, $l=3$ (for $Q=24$), of sizes $15$, $20$, $25$ and $21$, as well as the $25$-element vectors
 $u=\tilde u_1\otimes\tilde u_2\in\Z^{25}$ of Definition~\ref{def:levels} for $(b,s)=(5,2)$ and $Q\in\{108,116,124\}$
 (scalings below the threshold $8K_2$ of Theorem~\ref{thm:explicit}, which therefore does not cover them), were verified to be dissociated by a
-meet-in-the-middle enumeration of all signed sums.
+meet-in-the-middle enumeration of all signed sums. These are independent checks of small examples; the one-level
+examples also fail the sufficient divisibility or size hypotheses of Theorem~\ref{thm:A}, so that theorem is not
+being invoked to certify them.
 \item \emph{Sharpness of Lemma~\ref{lem:cube}.} For $b=5$ and $Q\in\{16,24,40\}$ the coordinates of $\tilde u_1$ are in fact
 exactly $Q$-dissociated, whereas the lemma guarantees $Q-K_1\approx Q-7.7$. We do not know whether
 $L_s(Q)\cap\dcube Q^d=\{0\}$ holds in general; if it did, one could take $Q=2^l$ whenever $2^l$ is a good scaling, and the
@@ -789,20 +1227,27 @@ $\hat a_1(q)=\Nm(q)-\frac qb\Nm'(q)$ with $\Nm(q)=\prod_{\zeta\ne1}(1+q\gpoly(\z
 $\Res_q(\hat a_1,\hat c_1)$ equals $2\cdot11\cdot19$, $2^3\cdot7\cdot43\cdot379$,
 $2\cdot3^5\cdot5^2\cdot23^3\cdot683\cdot14797$ and $3^3\cdot13\cdot53^3\cdot61\cdot2731\cdot626592619$ for $b=5,7,11,13$;
 the primes $19$ (for $b=5$) and $7$ (for $b=7$) are exactly the second-level failures observed at $Q=20$ and $Q=12$.
-\item \emph{Certification of $H(b,s)$.} If a non-constant $f\in\Z[t]$ divided both $\hat a_k$ and $\hat c_k$, then
-$f(t)\mid\gcd(\hat a_k(t),\hat c_k(t))$ for all $t\in\Z$, so $\gcd(\hat a_k(t),\hat c_k(t))=1$ would force $|f(t)|=1$, which is
-possible for at most $2\deg f\le2D_k$ integers $t$, where $D_k=(b-1)\deg\hat\theta_k$ bounds $\deg\hat a_k$. (Indeed
-$\deg\hat\rho_k<\deg\hat\theta_k$ by induction, so the leading form of $\adj(\overline{\hat\varphi_k})$ in $t$ is
-$\hat\theta_k^{\,b-1}\adj(\bar\gpoly)=\hat\theta_k^{\,b-1}\frac{2^b+1}{3}\sum_ix^i$, whence
-$\deg\hat a_k=\deg\hat c_k=(b-1)\deg\hat\theta_k$ and $\deg\hat\rho_{k+1}=\deg\hat\theta_{k+1}-1$.) We exhibited
-more than $2D_k$ integers $t$ (with levels $\le k$ primitive) and $\gcd(a_k,c_k)=1$, for each $k<s$ and each $(b,s)$ in
-Corollary~\ref{cor:numbers}; e.g.\ for $(11,3)$, $D_1=10$, $D_2=110$, and $246$, respectively $221$, good values of $t$
-occur among the first $426$. For $(5,2)$ and $(7,2)$ we also computed $\Res_t(\hat a_2,\hat c_2)\ne0$ directly ($297$ and
-$1319$ decimal digits).
-\item \emph{The table.} For each $(b,s)$ in Table~\ref{tab:main} we chose $l=\lceil\log_2(200(d-1)K_s)\rceil$, so that
-$(Q/2^l)^{d-1}\le e^{1/200}$, and the least $t$ with $Q=2^{s+1}t\ge2^l+K_s$ and $\gamma_1=\dots=\gamma_s=1$; at most three
-values of $t$ were needed in every case. For $(17,4)$ the four adjugates involve integers of about $3\cdot10^6$ bits.
-The column $f(n)$ is the exact rational $\max u/2^{l(d-1)}$ of Theorem~\ref{thm:explicit}, rounded up.
+\item \emph{Checks of first-level coprimality.} The four nonzero resultants in the preceding item give numerical
+checks of Theorem~\ref{thm:base-coprime}, which proves nonvanishing for every allowed $b$ without computation.
+The file \texttt{results/first\_level\_resultants.json} contains the complete integer coefficients of the first-level
+polynomials and adjugates, their determinants, and the resultant values and factorisations. The accompanying
+\texttt{exp09} script checks the polynomial adjugate identity and the resultants with exact arithmetic.
+The separate \texttt{exp10} script checks the circulant and recurrence identities and computes polynomial gcds for
+all odd $3\le b\le101$, including $3\mid b$ as a control. These calculations supplement the general proof.
+\item \emph{The table.} For each $(b,s)$ in Table~\ref{tab:main} we chose
+$l=\lceil\log_2(200(d-1)K_s)\rceil$ as an initial scale, and the least $t$ with
+$Q=2^{s+1}t\ge2^l+K_s$ and $\gamma_1=\dots=\gamma_s=1$; at most three values of $t$ were needed in every case.
+Rounding and search are accounted for using the actual value of $Q$. Put $z=(d-1)(Q-2^l)/2^l$.
+The verifier checks the rational inequalities $0\le z<1$ and $(1-z)^{-1}<1.006$ in every row. The binomial theorem gives
+\[
+(Q/2^l)^{d-1}\le\sum_{j\ge0}z^j=(1-z)^{-1}<1.006.
+\]
+The exact maximum is also checked against the shape estimate in every row.
+For $(17,4)$ the four adjugates involve integers of about $3\cdot10^6$ bits.
+The two bound columns round the exact rationals $\max u/2^{l(d-1)}$ and $\max u/2^{l(d-1)+1}$ upwards to six decimal
+places. For a positive rational $p/q$, the printed bound is
+$\lceil10^6p/q\rceil/10^6$, computed entirely with integers. The $\Delta_{b,s}$ column is an approximation to five
+decimal places, not an asserted upper bound.
 \end{enumerate}
 
 \begin{table}[ht]
@@ -812,20 +1257,20 @@ The column $f(n)$ is the exact rational $\max u/2^{l(d-1)}$ of Theorem~\ref{thm:
 $b$ & $s$ & $d=b^s$ & $l$ & $n=ld$ & $Q$ & $f(n)\le$ & $\max A/2^n\le$ & $\Delta_{b,s}$\\
 \midrule
 5 & 1 & 5 & 13 & 65 & 8200 & 0.690649 & 0.345325 & 0.68750\\
-7 & 1 & 7 & 15 & 105 & 32784 & 0.674014 & 0.337007 & 0.67188\\
+7 & 1 & 7 & 15 & 105 & 32784 & 0.674015 & 0.337008 & 0.67188\\
 11 & 1 & 11 & 16 & 176 & 65572 & 0.670804 & 0.335402 & 0.66699\\
 13 & 1 & 13 & 17 & 221 & 131120 & 0.669767 & 0.334884 & 0.66675\\
 5 & 2 & 25 & 19 & 475 & 524392 & 0.537132 & 0.268566 & 0.53457\\
 7 & 2 & 49 & 22 & 1078 & 4194584 & 0.474515 & 0.237258 & 0.47299\\
-11 & 2 & 121 & 25 & 3025 & 33555528 & 0.448812 & 0.224406 & 0.44706\\
+11 & 2 & 121 & 25 & 3025 & 33555528 & 0.448813 & 0.224407 & 0.44706\\
 13 & 2 & 169 & 26 & 4394 & 67110656 & 0.447207 & 0.223604 & 0.44520\\
-5 & 3 & 125 & 25 & 3125 & 33555168 & 0.771242 & 0.385621 & 0.76915\\
+5 & 3 & 125 & 25 & 3125 & 33555168 & 0.771243 & 0.385622 & 0.76915\\
 7 & 3 & 343 & 28 & 9604 & 268438368 & 0.463429 & 0.231715 & 0.46171\\
 11 & 3 & 1331 & 33 & 43923 & 8589952400 & 0.317045 & 0.158523 & 0.31617\\
-13 & 3 & 2197 & 34 & 74698 & 17179903936 & 0.304338 & 0.152169 & 0.30299\\
+13 & 3 & 2197 & 34 & 74698 & 17179903936 & 0.304339 & 0.152170 & 0.30299\\
 17 & 3 & 4913 & 37 & 181781 & 137439055184 & 0.298073 & 0.149037 & 0.29699\\
-13 & 4 & 28561 & 42 & 1199562 & 4398047063424 & 0.265069 & 0.132535 & 0.26412\\
-17 & 4 & 83521 & 46 & 3841966 & 70368746289408 & 0.206072 & 0.103036 & 0.20556\\
+13 & 4 & 28561 & 42 & 1199562 & 4398047063424 & 0.265070 & 0.132535 & 0.26412\\
+17 & 4 & 83521 & 46 & 3841966 & 70368746289408 & 0.206073 & 0.103037 & 0.20556\\
 \bottomrule
 \end{tabular}
 \caption{Certified explicit dissociated sets $A$ of size $n=ld$ (Theorem~\ref{thm:explicit}). The set $A$ is the lift of
@@ -835,9 +1280,9 @@ $\gamma_1=\dots=\gamma_s=1$. The previous explicit record is $\max A\le0.22002\c
 \end{table}
 
 Table~\ref{tab:main} is read as follows. In every row the column $f(n)\le$ is within $0.6\%$ of $\Delta_{b,s}$ (the largest
-ratio, about $1.006$, occurs at $(11,1)$), so the losses from the finite $l$ and from the factor $1+10K_s/Q$ are negligible, and what a pair $(b,s)$ can achieve is
-essentially $\Delta_{b,s}$. Since the bound of Theorem~\ref{thm:explicit} is never below $\Delta_{b,s}>(2/3)^s$, no pair
-with $s\le2$ can certify $\max A/2^n<\frac12(2/3)^2=2/9$, let alone Bohman's $0.22002$; for $s=3$ one needs
+ratio, about $1.006$, occurs at $(11,1)$), so in these examples the finite-scale loss relative to $\Delta_{b,s}$ is small.
+The analytic upper bound on the right of Theorem~\ref{thm:explicit} is at least $\Delta_{b,s}>(2/3)^s$. Thus that
+upper bound, with $s\le2$, cannot establish $\max A/2^n<\frac12(2/3)^2=2/9$, or improve Bohman's $0.22002$; for $s=3$ one needs
 $2^{-b}b^2$ small, and $(7,3)$ still gives $0.2317$ while $(11,3)$ is the first pair below $0.22002$. Increasing $s$
 further requires $b$ to grow like $s\log_2s$ to keep $(1+2^{-b})^{(b^s-1)/(b-1)}$ bounded, which is the mechanism behind
 Theorem~\ref{thm:rate}; the price is the dimension $d=b^s$ of the vector and the height of the adjugates, about
@@ -848,67 +1293,242 @@ Lemma~\ref{lem:mono}, every row is also an upper bound for $f(n)$ at all larger 
 \section{Remarks and open problems}\label{sec:remarks}
 
 \subsection{Sizes reached by the construction}
-Our sizes are multiples $ld$ of $d=b^s$ with $l\ge\log_2(dK_s)$; since numerically $K_1\approx0.26\,b^2$ and hence, by
-Proposition~\ref{prop:K}, $K_s=O(b^2d)$, they are of the form $n\approx2d\log_2d$ with $d=b^s$, a sparse set.
-Lemma~\ref{lem:mono} fills the gaps between consecutive sizes without any loss in $\max A/2^{|A|}$, and it is the only
-cheap way we know: three natural ways to reach other sizes \emph{inside} the construction all lose a factor exponential
-in the number of added elements.
-(i) If $A$ is dissociated with sum $S$, then $A\cup\{S+1\}$ is dissociated, but this multiplies $f$ by about $|A|/2$.
-(ii) Mixed lifts $\bigcup_i\{2^ju_i:j<l_i\}$ are dissociated as soon as $u$ is $2^{\max_il_i}$-dissociated, but if $r$
-coordinates use $l+1$ doublings the bound becomes $f(ld+r)\le2^{d-r}\Delta(1+o(1))$.
-(iii) A lift $B\cdot U$ by a dissociated set $B$ with $\sum B<Q$ has $|B||U|$ elements and loses the factor
-$(\sum B/2^{|B|})^{|U|-1}\ge1$, with equality only for $B=\{1,2,\dots,2^{l-1}\}$.
-Padding the lattice itself, from $V_d$ to $V_{d+1}$ via $\Lat^+=\{(\lambda+kv,-kh)\}$, gives an admissible pair but
-multiplies $\Delta$ by the height $h$. Two consequences of Lemma~\ref{lem:mono} deserve to be made explicit. First,
-together with the non-effective disproof it shows that $f(n)\to0$ along all $n$, not only along a subsequence. Second,
-the limit $\lim_{n\to\infty}f(n)$ exists, and each entry of Table~\ref{tab:main} is an explicit upper bound for it; the
-effective content of this paper is the rate at which these explicit bounds decrease (Theorem~\ref{thm:rate} and
-Corollary~\ref{cor:rate-all}).
+For fixed $(b,s)$, the binary lift produces sizes $n=ld$, where $d=b^s$.
+The scale required for a small loss depends on both the perturbation
+constant $K_s$ and the spacing of good scalings. More precisely, suppose
+that a good scaling can be found in every interval $[X,X+G_{b,s}]$ above
+the threshold $8K_s$. Choosing such a scaling with
+\[
+ 2^l+K_s\le Q\le2^l+K_s+G_{b,s}
+\]
+gives
+\[
+ \Bigl(\frac Q{2^l}\Bigr)^{d-1}
+ \le \exp\!\Bigl(\frac{(d-1)(K_s+G_{b,s})}{2^l}\Bigr).
+\]
+Thus $d(K_s+G_{b,s})/2^l=o(1)$ suffices to make the finite-scale loss
+in Theorem~\ref{thm:explicit} tend to $1$. Positive density of good
+scalings in intervals $[X,2X]$ alone gives no such bound on their gaps
+near the prescribed point $2^l+K_s$.
+
+Lemma~\ref{lem:AP-heights} proves $K_s=O(b^2d)$ with an absolute
+constant. For example, a polynomial bound $G_{b,s}=d^{O(1)}$ permits
+$l=O(\log d)$ and hence $n=O(d\log d)$ with a vanishing finite-scale
+loss. Such a size estimate requires control of $G_{b,s}$ in addition
+to control of $K_s$.
+
+Lemma~\ref{lem:mono} extends any constructed set to every larger size
+without changing its normalized maximum. It is useful to compare this
+operation with other elementary extensions using their exact ratios.
+Write
+\[
+ \mathcal R(A):=\frac{\max A}{2^{|A|-1}}
+\]
+for an individual dissociated set $A$.
+
+\paragraph{Adjoining an element larger than all subset sums.}
+If $|A|=n$, $S=\sum_{a\in A}a$, and $N=\max A$, then
+$A^+=A\cup\{S+1\}$ is dissociated and
+\[
+ \frac{\mathcal R(A^+)}{\mathcal R(A)}=\frac{S+1}{2N}.
+\]
+This factor depends on $A$. It is about $n/2$ when $S\sim nN$,
+whereas it equals $1$ for $A=\{2^j:0\le j<n\}$.
+The identity concerns the two individual sets; it does not assert
+that the extremal function $f$ is multiplied by this factor.
+
+\paragraph{Mixed binary lifts.}
+Let $u$ have $d$ positive coordinates and be $T$-dissociated, with
+$T=2^{l+1}$. Give $r$ coordinates $l+1$ binary digits and the remaining
+$d-r$ coordinates $l$ digits, where $1\le r\le d$. The resulting set
+$A$ is dissociated, has $ld+r$ elements, and satisfies
+\[
+ \mathcal R(A)\le
+ 2^{d-r}\frac{\max u}{T^{d-1}}.
+\]
+Thus the shape estimate $\max u/T^{d-1}=\Delta(1+o(1))$, when it is
+available at this scale, yields the bound
+$f(ld+r)\le2^{d-r}\Delta(1+o(1))$. The factor is a bound arising
+from this choice of common scale; it need not be the actual ratio of
+the mixed lift to a particular binary lift.
+
+\paragraph{Lifts using a general dissociated digit set.}
+Let $B\subset\N$ be dissociated, with $m=|B|$, $S=\sum_{a\in B}a$,
+and $H=\max B$. Let $u$ be a positive $Q$-dissociated vector of length
+$d$, where $Q$ is an integer and $Q\ge S+1$. Then
+\[
+ A=B\cdot U:=\{a u_i:a\in B,\ 1\le i\le d\}
+\]
+is dissociated and has $md$ elements: the difference between two digit
+sums in each coordinate has absolute value at most $S<Q$, and
+dissociation of $B$ handles equality within each coordinate. Its
+normalized maximum satisfies the exact identity
+\begin{equation}\label{eq:general-digit-lift}
+ \mathcal R(A)=
+ \frac{H}{2^{m-1}}
+ \Bigl(\frac{Q}{2^m}\Bigr)^{d-1}
+ \frac{\max u}{Q^{d-1}}.
+\end{equation}
+The $2^m$ distinct subset sums of $B$ lie among the $S+1$ integers
+$0,\dots,S$, so $S+1\ge2^m$. Equality holds precisely for
+$B=\{1,2,4,\dots,2^{m-1}\}$: if every integer in $[0,S]$ is a subset
+sum, the increasing elements of $B$ must successively be one more
+than the sum of their predecessors. For this binary digit set,
+choosing $Q=S+1=2^m$ makes the first two factors in
+\eqref{eq:general-digit-lift} equal to $1$. For each fixed nonbinary
+$B$, the factor $(Q/2^m)^{d-1}$ grows exponentially with $d$ at every
+permitted scale $Q\ge S+1$. The additional factor $H/2^{m-1}$ must
+also be retained; there is no general loss formula depending only
+on $S/2^m$.
+
+\paragraph{Padding the lattice.}
+For an admissible pair $(\Lat,v)$ in $\R^d$ of positive height $h$,
+set
+\[
+ \Lat^+=\{(\lambda+kv,-kh):\lambda\in\Lat,\ k\in\Z\}
+ \subset V_{d+1},\qquad v^+=e_{d+1}.
+\]
+This is an admissible pair. Indeed, if the first $d$ coordinates of
+$(\lambda+kv,-kh)+tv^+$ lie in $(-1,1)^d$, condition (A2) for the
+original pair forces $|k|<1$, hence $k=0$; condition (A1) then gives
+$\lambda=0$. The last coordinate consequently gives $|t|<1$.
+The projection of $(v,-h)$ onto the orthogonal complement of
+$V_d\times\{0\}$ has length $h\sqrt{(d+1)/d}$, so
+\[
+ \covol(\Lat^+)=\covol(\Lat)h\sqrt{\frac{d+1}{d}},
+ \qquad h^+=1,\qquad \Delta^+=h\Delta.
+\]
+This is an exact factor. It exceeds $1$ for the pairs used here,
+whose heights are $(3/2)^s$; an arbitrary admissible pair is only
+assumed to have $h>0$.
+
+Monotonicity also shows that the limit of $f(n)$ exists. Every
+certified row of Table~\ref{tab:main} bounds $f(n)$ at every larger
+size, while an asymptotic rate requires quantitative control of
+how the certified sizes grow.
 
 \subsection{The exponent and heights of admissible pairs}
 \begin{proposition}\label{prop:height}
-Let $(\Lat,v)$ be admissible in $\R^b$ with height $h$ and $\covol(\Gamma)=1+\eta$. Its $s$-fold tensor power
-(Proposition~\ref{prop:tensor}) is admissible in dimension $d=b^s$ with $\Delta\le(1+\eta)^{(b^s-1)/(b-1)}h^{-s}$.
-Conversely $\Delta\ge1/\sqrt b$ for every admissible pair in $\R^b$, so $h=\covol(\Gamma)/\Delta\le(1+\eta)\sqrt b$.
+Let $(\Lat,v)$ be admissible in $\R^b$, of positive height $h$, and
+write $\covol(\Gamma)=1+\eta$. Its $s$-fold tensor power is admissible
+in dimension $d=b^s$, with normalized covolume
+\[
+ \Delta_s=(1+\eta)^{(b^s-1)/(b-1)}h^{-s}.
+\]
+Conversely, every admissible pair in $\R^b$ satisfies
+$\Delta\ge b^{-1/2}$, and therefore
+$h\le(1+\eta)\sqrt b$.
 \end{proposition}
 \begin{proof}
-The first part is Proposition~\ref{prop:tensor} iterated. For the second, (A1) says that $\Lat$ is a packing lattice for
-$\frac12\dcube1^b\cap V_b$, so Minkowski's theorem gives
+The tensor formula follows by iterating Proposition~\ref{prop:tensor}.
+For the second assertion, (A1) and Minkowski's theorem give
 \[
-\covol(\Lat)\ge2^{-(b-1)}\operatorname{vol}_{b-1}\bigl(\dcube1^b\cap V_b\bigr)\ge1,
+ \covol(\Lat)\ge
+ 2^{-(b-1)}\operatorname{vol}_{b-1}\bigl((-1,1)^b\cap V_b\bigr)
+ \ge1,
 \]
-the last inequality by Vaaler's cube slicing theorem \cite{Va79}; hence $\Delta=\covol(\Lat)/\sqrt b\ge b^{-1/2}$.
+where the last inequality is Vaaler's cube slicing theorem
+\cite{Va79}. Divide by $\sqrt b$ and use
+$h\Delta=\covol(\Gamma)=1+\eta$.
 \end{proof}
-In the base pair $h=3/2$ and $\eta=2^{-b}$; the exponent $c=\log(3/2)$ in $n^{-c/\log\log n}$ is $\log h$. An admissible
-pair in dimension $b$ with $h\ge b^{\alpha}$ and $\eta\le b^{-Cs}$ would give $\Delta\le2b^{-\alpha s}=2d^{-\alpha}$, i.e.\
-(given a primitivisation, and using Lemma~\ref{lem:mono} to pass to all $n$) $f(n)\le n^{-\alpha+o(1)}$, and by the
-proposition $\alpha\le\frac12$ is the natural limit, matching the Erd\H{o}s--Moser barrier $f(n)\gg n^{-1/2}$. We therefore
-pose:
+
+For our base pair, $h=3/2$ and $\eta=2^{-b}$. At the level of lattice
+covolumes, the height contributes the factor $h^{-s}$; thus $\log h$
+governs this exponential decay in $s$. An improved height can give
+an improved bound for $f$, provided the corresponding
+primitivisation and lift have suitably controlled size and loss.
+
+More precisely, suppose that a family of base pairs and tensor
+powers has $d=b^s\to\infty$,
+\[
+ h\ge b^\alpha,\qquad
+ \eta\frac{b^s-1}{b-1}\le\log2.
+\]
+Then Proposition~\ref{prop:height} gives
+$\Delta_s\le2d^{-\alpha}$. Suppose in addition that effective
+primitivisations and binary lifts produce sizes $n=ld$ satisfying
+\[
+ l=d^{o(1)},\qquad
+ f(ld)\le d^{o(1)}\Delta_s.
+\]
+These two conditions imply
+\[
+ f(n)\le d^{-\alpha+o(1)}=n^{-\alpha+o(1)}
+\]
+along the constructed sizes. In the setting of
+Theorem~\ref{thm:explicit}, the second condition amounts to
+controlling its finite-scale factor
+$(Q/2^l)^{d-1}(1+10K_s/Q)$ by $d^{o(1)}$, in addition to satisfying
+$2^l\le Q-K_s$.
+To obtain the same exponent for all sufficiently large integers,
+it is enough that the constructed sizes can be listed increasingly
+as $n_j\to\infty$ with
+$\log n_{j+1}/\log n_j\to1$; Lemma~\ref{lem:mono} then interpolates
+between consecutive sizes. Monotonicity alone does not preserve
+this exponent across arbitrarily large multiplicative gaps.
+The height bound in Proposition~\ref{prop:height} gives
+$\alpha\le1/2$ in this regime, in agreement with the lower bound
+$f(n)\gg n^{-1/2}$.
+
 \begin{problem}
-Determine $h^*(b)=\sup\{h:(\Lat,v)\text{ admissible in }\R^b,\ \covol(\Gamma)\le1+2^{-b}\}$. Is $h^*(b)\to\infty$? Is
-$h^*(b)\ge b^{\alpha}$ for some $\alpha>0$?
+Determine
+\[
+ h^*(b)=\sup\{h:(\Lat,v)\text{ is admissible in }\R^b,
+                 \ \covol(\Gamma)\le1+2^{-b}\}.
+\]
+Does $h^*(b)\to\infty$? Is $h^*(b)\ge b^\alpha$ for some
+$\alpha>0$ and all sufficiently large $b$?
 \end{problem}
-Any improvement of the height $3/2$, even to another constant, improves the constant $c$; by the proposition the question
-is equivalent to the existence of lattice packings of the central hyperplane section of the cube with density
-$\gg b^{\alpha-1/2}$ that also satisfy the ``real-$t$'' condition (A2).
+
+There is a precise packing interpretation with an extension
+condition. Put
+\[
+ C_b=[-1/2,1/2]^b\cap V_b,\qquad
+ \nu_b=\operatorname{vol}_{b-1}(C_b).
+\]
+Condition (A1) says that $\Lat$ is a packing lattice for $C_b$;
+its packing density is
+\[
+ \delta(\Lat)=\frac{\nu_b}{\covol(\Lat)}
+             =\frac{\nu_b h}{\sqrt b\,\covol(\Gamma)}.
+\]
+Restrict to those packing lattices that admit a vector $v$ satisfying
+the real-$t$ condition (A2) and
+$1\le\covol(\Lat\oplus\Z v)\le1+2^{-b}$. Within this class,
+the exact identity
+\[
+ h=\frac{\sqrt b\,\covol(\Gamma)}{\nu_b}\,\delta(\Lat)
+\]
+relates large heights to large packing densities, with the
+covolume factor between $1$ and $1+2^{-b}$. In particular,
+$h\ge b^\alpha$ implies
+$\delta(\Lat)\ge \nu_b b^{\alpha-1/2}/(1+2^{-b})$.
+A packing lattice satisfying (A1) alone need not supply either the
+extension vector or the required full-lattice covolume, so no
+equivalence with unrestricted lattice packing is asserted.
 
 \subsection{Siegel's lemma}
-As noted in \cite{EP1}, and observed earlier by Schinzel and Aliev \cite{Al08}, if $C_d$ denotes the optimal constant in
+As noted in \cite{EP1}, and observed earlier by Schinzel and Aliev \cite{Al08}, for $d\ge2$ let $C_d$ denote the optimal constant in
 Siegel's lemma for one equation in $d$ unknowns (so that every nonzero $a\in\Z^d$ has a nonzero integer relation $x$
-with $|x|_\infty^{d-1}\le C_d|a|_\infty$; see \cite{BoVa83}), then $f(d)\ge C_d^{-1}$. Each vector $u$ of Theorem~\ref{thm:explicit} is an explicit integer vector of
+with $|x|_\infty^{d-1}\le C_d|a|_\infty$; see \cite{BoVa83}). Then $f(d)\ge C_d^{-1}$. Each vector $u$ of Theorem~\ref{thm:explicit} is an explicit integer vector of
 height at most $Q^{d-1}\Delta_{b,s}(1+10K_s/Q)$ all of whose nonzero integer relations $c$ satisfy $|c|_\infty\ge Q-K_s$,
 so it gives the explicit lower bound $C_d\ge(1-K_s/Q)^{d-1}/\bigl(\Delta_{b,s}(1+10K_s/Q)\bigr)$ for $d=b^s$; for example
 $C_{1331}\ge3.15$ and $C_{83521}\ge4.84$.
 
 \subsection*{Acknowledgements}
-The construction made explicit here is due to GPT-6 Astra as expounded by Thomas Bloom on \texttt{erdosproblems.com};
-this paper only supplies the effective primitivisation, the structural theorems and the computations.
-In accordance with the journal's Artificial Intelligence Policy, the author discloses that an AI assistant (Claude, by
-Anthropic, operated through the Cursor IDE) was used in developing the arguments, in implementing the computations and in
-drafting the text; the author has checked all proofs and computations and takes full responsibility for the content.
+The underlying lattice construction is due to GPT-6 Astra; we thank Thomas Bloom for its exposition on
+\texttt{erdosproblems.com}, and Tom Adamczewski for making the formal proof available. This paper develops the
+tensor-preserving perturbation, its structural and local criteria, and the certified constructions described above.
+The author discloses that Claude (Anthropic, through the Cursor IDE) and Codex (OpenAI) assisted in developing and
+reviewing arguments, implementing and checking computations, and drafting and revising the text. The author takes
+full responsibility for the proofs, computations and references. The new results in this paper have not been
+formally verified in Lean.
 The code and certificate data are available at \url{https://github.com/Chth1z/math-erdos1-dissociated-sets}.
 
 \begin{thebibliography}{99}
+\bibitem{Ad26} T.~Adamczewski (repository maintainer). Erd\H{o}s problem \#1: disproof. Lean proof by GPT-6 Astra,
+\href{https://github.com/tadamcz/erdos1/tree/0e395153306f34b3829d118b85bdd704136f2843}{\texttt{tadamcz/erdos1}, commit \texttt{0e395153306f}}, 2026.
+Primary proof module: \texttt{Erdos1/Resolutions/Erdos1\_219usd\_38h.lean}. Accessed 8 September 2026.
 \bibitem{Al08} I.~Aliev. Siegel's lemma and sum-distinct sets. \emph{Discrete Comput.\ Geom.}, 39: 59--66, 2008. \doi{10.1007/s00454-008-9059-9}
 \bibitem{EP1} T.~F.~Bloom. Erd\H{o}s Problem \#1, \url{https://www.erdosproblems.com/1}; includes the proof exposition of the construction of GPT-6 Astra (last edited 3 September 2026; status ``disproved, proof verified in Lean''). Accessed 7 September 2026.
 \bibitem{Bo96} T.~Bohman. A sum packing problem of Erd\H{o}s and the Conway--Guy sequence. \emph{Proc.\ Amer.\ Math.\ Soc.}, 124: 3627--3636, 1996. \doi{10.1090/S0002-9939-96-03653-2}
@@ -916,7 +1536,7 @@ The code and certificate data are available at \url{https://github.com/Chth1z/ma
 \bibitem{BoVa83} E.~Bombieri and J.~Vaaler. On Siegel's lemma. \emph{Invent.\ Math.}, 73: 11--32, 1983. \doi{10.1007/BF01393823}
 \bibitem{CoGu68} J.~H.~Conway and R.~K.~Guy. Sets of natural numbers with distinct sums. \emph{Notices Amer.\ Math.\ Soc.}, 15: 345, 1968. See also R.~K.~Guy, \emph{Unsolved Problems in Number Theory}, 3rd ed., Springer, 2004, Problem C8.
 \bibitem{DFX21} Q.~Dubroff, J.~Fox, and M.~W.~Xu. A note on the Erd\H{o}s distinct subset sums problem. \emph{SIAM J.\ Discrete Math.}, 35: 322--324, 2021. \doi{10.1137/20M1385883}
-\bibitem{El86} N.~D.~Elkies. An improved lower bound on the greatest element of a sum-distinct set of fixed order. \emph{J.\ Combin.\ Theory Ser.\ A}, 41: 89--94, 1986. \doi{10.1016/0097-3165(86)90116-0}
+\bibitem{El86} N.~D.~Elkies. An improved lower bound on the greatest element of a sum-distinct set of fixed order. \emph{J.\ Combin.\ Theory Ser.\ A}, 41: 89--94, 1986.\newline\doi{10.1016/0097-3165(86)90116-0}
 \bibitem{Er56} P.~Erd\H{o}s. Problems and results in additive number theory. In \emph{Colloque sur la Th\'eorie des Nombres, Bruxelles, 1955}, pages 127--137. Georges Thone, Li\`ege; Masson, Paris, 1956.
 \bibitem{Gu82} R.~K.~Guy. Sets of integers whose subsets have distinct sums. In \emph{Theory and Practice of Combinatorics}, North-Holland Math.\ Stud.\ 60 / Ann.\ Discrete Math.\ 12, pages 141--154. North-Holland, Amsterdam, 1982. \doi{10.1016/S0304-0208(08)73500-X}
 \bibitem{HoKa23} T.~Horesh and Y.~Karasik. Equidistribution of primitive lattices in $\R^n$. \emph{Q.\ J.\ Math.}, 74: 1253--1294, 2023. \doi{10.1093/qmath/haad008}

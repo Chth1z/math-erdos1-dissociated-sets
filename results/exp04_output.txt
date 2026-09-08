@@ -1,0 +1,25 @@
+(b,s)=(5,1) Q=  6: direct gcd=     1  prod content=     1  direction match=True  conts=[1]  max(u)/Q^(d-1)=1.49846  Delta=0.68750
+(b,s)=(5,1) Q= 10: direct gcd=     1  prod content=     1  direction match=True  conts=[1]  max(u)/Q^(d-1)=1.12660  Delta=0.68750
+(b,s)=(5,1) Q= 16: direct gcd=     1  prod content=     1  direction match=True  conts=[1]  max(u)/Q^(d-1)=0.94630  Delta=0.68750
+(b,s)=(5,1) Q= 22: direct gcd=     1  prod content=     1  direction match=True  conts=[1]  max(u)/Q^(d-1)=0.87073  Delta=0.68750
+(b,s)=(5,2) Q= 12: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=1.86582  Delta=0.53457
+(b,s)=(5,2) Q= 20: direct gcd=130321  prod content=130321  direction match=True  conts=[1, 130321]  max(u)/Q^(d-1)=0.00001  Delta=0.53457
+(b,s)=(5,2) Q= 32: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=0.84871  Delta=0.53457
+(b,s)=(5,2) Q= 44: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=0.74759  Delta=0.53457
+(b,s)=(3,2) Q= 12: direct gcd=1159171  prod content=1159171  direction match=True  conts=[19, 169]  max(u)/Q^(d-1)=0.00000  Delta=0.71191
+(b,s)=(3,2) Q= 20: direct gcd=13733651  prod content=13733651  direction match=True  conts=[31, 461]  max(u)/Q^(d-1)=0.00000  Delta=0.71191
+(b,s)=(3,2) Q= 32: direct gcd=137531681  prod content=137531681  direction match=True  conts=[49, 1169]  max(u)/Q^(d-1)=0.00000  Delta=0.71191
+(b,s)=(3,2) Q= 44: direct gcd=661979363  prod content=661979363  direction match=True  conts=[67, 2201]  max(u)/Q^(d-1)=0.00000  Delta=0.71191
+(b,s)=(7,2) Q= 12: direct gcd=117649  prod content=117649  direction match=True  conts=[1, 117649]  max(u)/Q^(d-1)=0.00004  Delta=0.47299
+(b,s)=(7,2) Q= 20: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=1.81071  Delta=0.47299
+(b,s)=(7,2) Q= 32: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=1.08604  Delta=0.47299
+(b,s)=(7,2) Q= 44: direct gcd=     1  prod content=     1  direction match=True  conts=[1, 1]  max(u)/Q^(d-1)=0.86357  Delta=0.47299
+
+K bounds: {(5, 1): 7.709090909090909, (5, 2): 98.25454545454545, (7, 2): 275.6544850498339, (11, 3): 17778.3927710487, (13, 3): 34742.91162875125, (11, 4): 239353.4657063559}
+
+== small explicit dissociated sets from the tensor construction ==
+(b,s,l)=(5,1,3) Q=16 |A|=15 dissociated=True f(A)=15.14087 max(u)/Q^(d-1)=0.94630
+(b,s,l)=(5,1,4) Q=24 |A|=20 dissociated=True f(A)=4.32570 max(u)/Q^(d-1)=0.85446
+(b,s,l)=(5,1,5) Q=40 |A|=25 dissociated=True f(A)=1.91666 max(u)/Q^(d-1)=0.78506
+(b,s,l)=(7,1,3) Q=24 |A|=21 dissociated=True f(A)=676.69464 max(u)/Q^(d-1)=0.92825
+(b,s,l)=(5,2,1) Q=104 |A|=25 dissociated=True f(A)=94077907073837530653084478016185322962944.00000 max(u)/Q^(d-1)=0.61575

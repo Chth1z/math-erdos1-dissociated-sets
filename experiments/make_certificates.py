@@ -1,80 +1,98 @@
-"""Produce the certificate table used in the paper (results/certificates.json, results/summary.md).
+"""Generate all 15 published rows and complete compressed exact witnesses.
 
-For each (b, s): choose l = ceil(log2(200 (d-1) K)), find the smallest good Q = 2^{s+1} t >= 2^l + K,
-and record the exact bound  f(l d) = max(u) / 2^{l(d-1)}  together with the level data.
-Everything is exact integer arithmetic; the certificate is "content(psi_k) = 1 for all k".
+Run: python experiments/make_certificates.py
+--big remains accepted for compatibility; all rows are always included.
 """
+from __future__ import annotations
+import gzip
+import argparse
 import hashlib
 import json
+from pathlib import Path
+import platform
+from importlib.metadata import version
 import sys
 from fractions import Fraction
-from math import log2
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-sys.set_int_max_str_digits(0)
-
-from tensor import K_bound, delta, tensor_certificate  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-PARAMS = [(5, 1), (7, 1), (11, 1), (13, 1), (5, 2), (7, 2), (11, 2), (13, 2), (5, 3), (7, 3), (11, 3), (13, 3), (17, 3), (13, 4)]
-if "--big" in sys.argv:
-    PARAMS.append((17, 4))
+sys.path.insert(0, str(ROOT / 'src'))
+sys.set_int_max_str_digits(0)
+from certificates import ceil_fraction, ceil_log2, integer_sha256, upper_decimal, witness_payload
+from tensor import K_bound, delta, tensor_certificate
 
-
-def sha(n: int) -> str:
-    return hashlib.sha256(str(n).encode()).hexdigest()[:16]
+PARAMS = [(5,1),(7,1),(11,1),(13,1),(5,2),(7,2),(11,2),(13,2),
+          (5,3),(7,3),(11,3),(13,3),(17,3),(13,4),(17,4)]
 
 
 def main():
-    rows = []
-    for (b, s) in PARAMS:
-        d = b ** s
-        K = K_bound(b, s)
-        Delta = delta(b, s)
-        l = int(log2(200 * (d - 1) * float(K))) + 1
-        Q0 = 2 ** (s + 1)
-        t = int((2 ** l + K) // Q0) + 1
-        tries = 0
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--big', action='store_true', help='compatibility option: all rows are included by default')
+    parser.parse_args()
+    rows, log = [], []
+    output = ROOT / 'results'
+    (output / 'witnesses').mkdir(parents=True, exist_ok=True)
+    for b, s in PARAMS:
+        d, K, Delta = b ** s, K_bound(b, s), delta(b, s)
+        l = ceil_log2(200 * (d - 1) * K)
+        step = 2 ** (s + 1)
+        start = ceil_fraction((2 ** l + K) / step)
+        t = start
         while True:
-            tries += 1
-            cert = tensor_certificate(b, s, Q0 * t)
+            cert = tensor_certificate(b, s, step * t)
             if cert.primitive:
                 break
             t += 1
-        Q = Q0 * t
-        umax, umin = cert.u_max(), cert.u_min()
+        Q, umax, umin = cert.Q, cert.u_max(), cert.u_min()
+        if Q < 8 * K or Q - K < 2 ** l:
+            raise ArithmeticError('the explicit-set theorem hypotheses failed')
+        if Fraction(umax) > Q ** (d - 1) * Delta * (1 + 10 * K / Q):
+            raise ArithmeticError('the shape bound failed')
         f_exact = Fraction(umax, 2 ** (l * (d - 1)))
-        ratio_Q = Fraction(umax, Q ** (d - 1))
+        f_upper, N_upper = upper_decimal(f_exact), upper_decimal(f_exact / 2)
+        if f_exact > Fraction(f_upper) or f_exact / 2 > Fraction(N_upper):
+            raise ArithmeticError('a printed upper bound is smaller than the exact value')
+        payload = json.dumps(witness_payload(cert), separators=(',', ':'), ensure_ascii=True).encode('ascii')
+        compressed = gzip.compress(payload, compresslevel=6, mtime=0)
+        witness_name = f'witnesses/b{b}-s{s}.json.gz'
+        (output / witness_name).write_bytes(compressed)
         row = {
-            "b": b, "s": s, "d": d, "l": l, "n": l * d, "Q": Q, "tries": tries,
-            "K": str(K), "K_float": float(K), "Delta": float(Delta),
-            "f_bound": float(f_exact), "maxu_over_Q^(d-1)": float(ratio_Q),
-            "N_over_2^n": float(f_exact) / 2,
-            "min_u_over_max_u": float(Fraction(umin, umax)),
-            "digits_max_u": len(str(umax)), "sha256_max_u": sha(umax),
-            "levels": [
-                {"k": L.k, "cont": L.cont, "digits_theta": len(str(L.theta)), "digits_rho": len(str(L.rho)),
-                 "theta": str(L.theta) if len(str(L.theta)) <= 200 else None,
-                 "rho": str(L.rho) if len(str(L.rho)) <= 200 else None,
-                 "u": [str(x) for x in L.u] if len(str(max(L.u))) <= 60 else None,
-                 "a_digits": len(str(L.a)), "c_digits": len(str(L.c))}
-                for L in cert.levels
-            ],
+            'format': 'tensor-certificate-v2', 'b': b, 's': s, 'd': d, 'l': l, 'n': l * d,
+            'Q': Q, 'tries': t - start + 1, 'K': str(K), 'Delta_exact': str(Delta),
+            'Delta_approx': float(Delta), 'f_bound': f_upper, 'N_over_2^n': N_upper,
+            'f_approx': float(f_exact), 'f_denominator_exponent': l * (d - 1),
+            'Q_loss_upper': upper_decimal(Fraction(Q, 2 ** l) ** (d - 1), 9),
+            'min_u_over_max_u_approx': float(Fraction(umin, umax)),
+            'digits_max_u': len(str(umax)), 'sha256_max_u': integer_sha256(umax),
+            'witness': witness_name, 'sha256_witness_gzip': hashlib.sha256(compressed).hexdigest(),
+            'sha256_witness_json': hashlib.sha256(payload).hexdigest(),
+            'levels': [{'k': L.k, 'cont': L.cont} for L in cert.levels],
         }
         rows.append(row)
-        print(f"({b},{s}) d={d} l={l} n={l*d} Q={Q} f<={float(f_exact):.6f} N/2^n<={float(f_exact)/2:.6f} "
-              f"Delta={float(Delta):.5f} conts={[L.cont for L in cert.levels]}", flush=True)
-    out = ROOT / "results" / "certificates.json"
-    out.write_text(json.dumps(rows, indent=1), encoding="utf-8")
-    md = ["| b | s | d=b^s | l | n=ld | Q | f(n) bound = max u / 2^{l(d-1)} | N/2^n bound | Delta_{b,s} | K_s |",
-          "|---|---|---|---|---|---|---|---|---|---|"]
-    for r in rows:
-        md.append(f"| {r['b']} | {r['s']} | {r['d']} | {r['l']} | {r['n']} | {r['Q']} | {r['f_bound']:.6f} | "
-                  f"{r['N_over_2^n']:.6f} | {r['Delta']:.5f} | {r['K_float']:.1f} |")
-    (ROOT / "results" / "summary.md").write_text("\n".join(md) + "\n", encoding="utf-8")
-    print("written results/certificates.json and results/summary.md")
+        line = (f"({b},{s}) d={d} l={l} n={l*d} Q={Q} tries={row['tries']} "
+                f'f<={f_upper} N/2^n<={N_upper} conts={[L.cont for L in cert.levels]} '
+                f'witness_bytes={len(compressed)}')
+        log.append(line)
+        print(line, flush=True)
+    (output / 'certificates.json').write_text(json.dumps(rows, indent=2) + '\n', encoding='utf-8')
+    markdown = ['| b | s | d=b^s | l | n=ld | Q | f(n) upper bound | max A / 2^n upper bound | Delta (approx.) | K_s (exact) |',
+                '|---|---|---|---|---|---|---|---|---|---|']
+    for row in rows:
+        markdown.append(f"| {row['b']} | {row['s']} | {row['d']} | {row['l']} | {row['n']} | {row['Q']} | "
+                        f"{row['f_bound']} | {row['N_over_2^n']} | {row['Delta_approx']:.5f} | {row['K']} |")
+    markdown.extend(['', 'All 15 rows are generated by `python experiments/make_certificates.py`.',
+                     'The two bound columns are rounded toward +infinity directly from exact rational values.',
+                     'Each row includes a compressed exact witness and full SHA-256 digests; all integers are exactly reconstructible from stored seeds.',
+                     'Verify independently with `python tools/verify_certificates.py`.',
+                     'The choice of l controls the target loss before rounding/search; the actual Q loss is recorded separately.', ''])
+    (output / 'summary.md').write_text('\n'.join(markdown), encoding='utf-8')
+    (output / 'make_certificates_log.txt').write_text('\n'.join(log) + '\n', encoding='utf-8')
+    (output / 'environment.json').write_text(json.dumps({'python': platform.python_version(),
+        'sympy': version('sympy'), 'numpy': version('numpy'),
+        'integer_arithmetic': 'Python arbitrary precision integers; fractions.Fraction',
+        'generator': 'python experiments/make_certificates.py',
+        'verifier': 'python tools/verify_certificates.py'}, indent=2) + '\n', encoding='utf-8')
+    print('Wrote all 15 certificates, exact witnesses, summary, and log.', flush=True)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -3,7 +3,7 @@
 For (b,s) in {(5,1),(5,2),(7,2),(3,2)} and several Q:
   * build the perturbed basis W+E of Q*Lambda_s with the monomial matching
   * compute its minors vector directly (gcd, direction)
-  * compare with the tensor certificate: gcd == prod content(psi_k), direction == ⊗ u~_k
+  * assert gcd == prod content(psi_k)^(b^(s-k)), direction == tensor product u~_k
 Also: the unperturbed W must have all minors equal (normal ∝ 1), i.e. W spans Q*Lambda_s ⊂ V.
 """
 import sys
@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from dissociated import is_dissociated, lift, f_ratio  # noqa: E402
+from dissociated import is_dissociated_big as is_dissociated, lift, f_ratio  # noqa: E402
 from lattice import minors_vector  # noqa: E402
 from tensor import perturbed_basis, tensor_certificate, K_bound, delta  # noqa: E402
 
@@ -36,8 +36,11 @@ def main():
             u = cert.full_u()
             prod_cont = 1
             for L in cert.levels:
-                prod_cont *= L.cont
+                prod_cont *= L.cont ** (b ** (s - L.k))
             same_dir = (wp == u)
+            assert g == prod_cont, "the exact index formula failed"
+            assert same_dir, "the tensor normal differs from the direct minors"
+            assert w == [prod_cont * x for x in u] or w == [-prod_cont * x for x in u]
             print(f"(b,s)=({b},{s}) Q={Q:3d}: direct gcd={g:6d}  prod content={prod_cont:6d}  "
                   f"direction match={same_dir}  conts={[L.cont for L in cert.levels]}  "
                   f"max(u)/Q^(d-1)={cert.u_max()/Q**(d-1):.5f}  Delta={float(delta(b,s)):.5f}")

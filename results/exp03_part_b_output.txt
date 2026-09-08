@@ -1,0 +1,7 @@
+
+== (b) admissibility sanity check of Lambda_2 (b=3, d=9) ==
+coefficient vectors tested: 5764801; nonzero lattice vectors inside (-1,1)^9: 0
+  t=1.0: lattice points with t*v in lam + (-1,1)^d: 0
+  t=1.25: lattice points with t*v in lam + (-1,1)^d: 0
+  t=1.5: lattice points with t*v in lam + (-1,1)^d: 0
+This is a finite coefficient-box check at three t values, not a proof of A2 for every real t.

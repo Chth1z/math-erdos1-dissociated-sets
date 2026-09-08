@@ -1,0 +1,7 @@
+PASS exact upper rounding and log2 boundaries (including 201 exact powers of two)
+PASS 20 cases: Cayley-Hamilton, Bareiss, Berkowitz, and witness reconstruction; corrupt seeds rejected
+PASS b=5: Res_q(a1,c1)=418; factors={'2': 1, '11': 1, '19': 1}; polynomial adjugate identity exact
+PASS b=7: Res_q(a1,c1)=912632; factors={'2': 3, '7': 1, '43': 1, '379': 1}; polynomial adjugate identity exact
+PASS b=11: Res_q(a1,c1)=1494012267296550; factors={'2': 1, '3': 5, '5': 2, '23': 3, '683': 1, '14797': 1}; polynomial adjugate identity exact
+PASS b=13: Res_q(a1,c1)=5454708353917474637583; factors={'3': 3, '13': 1, '53': 3, '61': 1, '2731': 1, '626592619': 1}; polynomial adjugate identity exact
+PASS full manifest verification rejects a bound lowered by one final-place unit

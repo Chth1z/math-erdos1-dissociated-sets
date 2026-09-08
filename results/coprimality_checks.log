@@ -1,0 +1,51 @@
+PASS b=3: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=5: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=7: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=9: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=11: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=13: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=15: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=17: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=19: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=21: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=23: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=25: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=27: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=29: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=31: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=33: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=35: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=37: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=39: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=41: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=43: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=45: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=47: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=49: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=51: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=53: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=55: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=57: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=59: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=61: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=63: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=65: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=67: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=69: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=71: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=73: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=75: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=77: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=79: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=81: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=83: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=85: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=87: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=89: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=91: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=93: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=95: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=97: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+PASS b=99: gcd_z=z + 1, gcd_q=q + 1/3; adjugate, Cassini, periodicity, repeated root
+PASS b=101: gcd_z=1, gcd_q=1; adjugate, Cassini, periodicity, repeated root
+ALL PASS: 50 odd b; gcd=1 exactly when 3 does not divide b; Binet/repeated-root checks for i=1..102; 8.206s. Finite checks support the separate general proof.

@@ -1,0 +1,49 @@
+[PASS] Example 20: psi_1 as printed -- [62017, 48704, 49792, 53704, 52104]
+[PASS] Example 20: N_1 = 266321 = 11^2*31*71 -- 266321
+[PASS] Example 20: psi_1 * conj(phi_1) = N_1
+[PASS] Example 20: u~_1 = (48704, 49792, 53704, 52104, 62017) -- [48704, 49792, 53704, 52104, 62017]
+[PASS] Example 20: u~_1 is 16-dissociated but not 17-dissociated
+[PASS] Example 20: lift with l=3 (15 elements) is dissociated
+[PASS] Example 20: a_1 = 62017, c_1 = 147200 coprime
+[PASS] K_1(5) = 424/55 -- 424/55
+[PASS] Delta_{5,1} = 11/16 -- 11/16
+[PASS] row (5,1) Q=8200 l=13: conts=[1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=7.71, 0.0s
+[PASS] row (5,1): exact ratio <= stored upward bound 0.690649, full sha(max u) matches
+[PASS] row (5,1): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000665
+[PASS] row (5,1): lift of u with l=3 (15 elements) is dissociated (meet in the middle, big ints)
+[PASS] row (7,1) Q=32784 l=15: conts=[1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=14.19, 0.0s
+[PASS] row (7,1): exact ratio <= stored upward bound 0.674015, full sha(max u) matches
+[PASS] row (7,1): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000250
+[PASS] row (7,1): lift of u with l=3 (21 elements) is dissociated (meet in the middle, big ints)
+[PASS] row (5,2) Q=524392 l=19: conts=[1, 1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=98.25, 0.0s
+[PASS] row (5,2): exact ratio <= stored upward bound 0.537132, full sha(max u) matches
+[PASS] row (5,2): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000028
+[PASS] row (7,2) Q=4194584 l=22: conts=[1, 1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=275.65, 0.0s
+[PASS] row (7,2): exact ratio <= stored upward bound 0.474515, full sha(max u) matches
+[PASS] row (7,2): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000006
+[PASS] row (11,2) Q=33555528 l=25: conts=[1, 1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=1080.56, 0.0s
+[PASS] row (11,2): exact ratio <= stored upward bound 0.448813, full sha(max u) matches
+[PASS] row (11,2): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000002
+[PASS] row (11,3) Q=8589952400 l=33: conts=[1, 1, 1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=17778.39, 0.0s
+[PASS] row (11,3): exact ratio <= stored upward bound 0.317045, full sha(max u) matches
+[PASS] row (11,3): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000000
+[PASS] row (13,3) Q=17179903936 l=34: conts=[1, 1, 1], hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K) -- K=34742.91, 0.0s
+[PASS] row (13,3): exact ratio <= stored upward bound 0.304339, full sha(max u) matches
+[PASS] row (13,3): max u <= Q^(d-1) Delta (1+10K/Q) -- max u / (Q^(d-1) Delta) = 1.000000
+[PASS] item 2: b=5, Q=16: level primitive and lift with l=3 (15 elements) dissociated
+[PASS] item 2: b=5, Q=24: level primitive and lift with l=4 (20 elements) dissociated
+[PASS] item 2: b=5, Q=40: level primitive and lift with l=5 (25 elements) dissociated
+[PASS] item 2: b=7, Q=24: level primitive and lift with l=3 (21 elements) dissociated
+[PASS] item 3: b=5, Q=24: u~_1 exactly 24-dissociated (brute force) -- 2s
+[PASS] item 2: (5,2) Q=108: conts=[1, 1], 25-element u dissociated (meet in the middle)
+[PASS] item 2: (5,2) Q=116: conts=[1, 1], 25-element u dissociated (meet in the middle)
+[PASS] item 2: (5,2) Q=124: conts=[1, 1], 25-element u dissociated (meet in the middle)
+[PASS] H(5,2): good t among 1..40 = [38], needed > 2D_k = [8] -- 0.0s
+[PASS] H(7,2): good t among 1..60 = [52], needed > 2D_k = [12] -- 0.0s
+[PASS] H(11,3): good t among 1..426 = [246, 221], needed > 2D_k = [20, 220] -- 0.6s
+[PASS] adj(m_{conj g}) = ((2^5+1)/3) * ones for b=5
+[PASS] adj(m_{conj g}) = ((2^7+1)/3) * ones for b=7
+[PASS] adj(m_{conj g}) = ((2^11+1)/3) * ones for b=11
+[PASS] adj(m_{conj g}) = ((2^13+1)/3) * ones for b=13
+
+ALL PASS

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from fractions import Fraction
+from functools import cache
 from math import gcd
 from typing import Sequence
 
@@ -125,6 +126,57 @@ def g_poly(b: int) -> list[int]:
     return g
 
 
+@cache
+def _shift_sum_charpoly(b: int) -> tuple[int, ...]:
+    """Coefficients of det(z I - S - S^2), decreasing degree, for odd b.
+
+    If r1,r2 solve x^2+x-z=0, T_j=r1^j+r2^j obeys T_j=-T_(j-1)+z*T_(j-2).
+    The resultant with x^b-1 gives det(z I-S-S^2)=z^b+T_b(z)-1.
+    """
+    if b < 3 or b % 2 == 0:
+        raise ValueError("require odd b >= 3")
+    previous, current = [2], [-1]
+    for _ in range(2, b + 1):
+        following = [0] * max(len(current), len(previous) + 1)
+        for i, x in enumerate(current):
+            following[i] -= x
+        for i, x in enumerate(previous):
+            following[i + 1] += x
+        previous, current = current, following
+    coefficients = current + [0] * (b + 1 - len(current))
+    coefficients[0] -= 1
+    coefficients[b] += 1
+    return tuple(reversed(coefficients))
+
+
+def level_adjugate(b: int, theta: int, rho: int) -> tuple[list[int], int]:
+    """Exact adj(m_conj(theta*g+rho)) e0 by Cayley-Hamilton, without elimination.
+
+    Retains integers of the size of the output. adjugate_element remains the
+    separate general-purpose Bareiss implementation for cross-checks.
+    """
+    if theta <= 0 or rho <= 0:
+        raise ValueError("theta and rho must be positive")
+    coefficients = _shift_sum_charpoly(b)
+    a = 2 * theta + rho
+    apowers, tpowers = [1], [1]
+    for _ in range(b):
+        apowers.append(apowers[-1] * a)
+        tpowers.append(tpowers[-1] * theta)
+    vector = [1] + [0] * (b - 1)
+    psi = [apowers[b - 1]] + [0] * (b - 1)
+    for k in range(1, b):
+        vector = [vector[(i + 1) % b] + vector[(i + 2) % b] for i in range(b)]
+        vector[0] += coefficients[k]
+        weight = apowers[b - 1 - k] * tpowers[k]
+        psi = [x + c * weight for x, c in zip(psi, vector)]
+    determinant = sum(coefficients[k] * apowers[b - k] * tpowers[k] for k in range(b + 1))
+    residual = [a * psi[i] - theta * psi[(i + 1) % b] - theta * psi[(i + 2) % b] for i in range(b)]
+    if residual != [determinant] + [0] * (b - 1):
+        raise ArithmeticError("the adjugate identity failed")
+    return psi, determinant
+
+
 # ----------------------------------------------------------------------------
 # the recursion
 # ----------------------------------------------------------------------------
@@ -173,8 +225,11 @@ class TensorCertificate:
         return vec
 
 
-def tensor_certificate(b: int, s: int, Q: int) -> TensorCertificate:
-    assert Q % (2 ** s) == 0
+def tensor_certificate(b: int, s: int, Q: int, *, method: str = "charpoly") -> TensorCertificate:
+    if b < 3 or b % 2 == 0 or s < 1 or Q <= 0 or Q % (2 ** s):
+        raise ValueError("require odd b >= 3, s >= 1, and positive Q divisible by 2^s")
+    if method not in ("charpoly", "bareiss"):
+        raise ValueError("method must be 'charpoly' or 'bareiss'")
     g = g_poly(b)
     cert = TensorCertificate(b, s, Q)
     prod_c, prod_a = 1, 1
@@ -183,12 +238,14 @@ def tensor_certificate(b: int, s: int, Q: int) -> TensorCertificate:
         rho = prod_a
         phi = [theta * gi for gi in g]
         phi[0] += rho
-        psi, N = adjugate_element(conj(phi))
+        psi, N = level_adjugate(b, theta, rho) if method == "charpoly" else adjugate_element(conj(phi))
         ct = content(psi)
         # u = x^{b-1} psi / ct  :  coordinate i of x^{b-1} psi is psi_{i+1 mod b}
         u = [psi[(i + 1) % b] // ct for i in range(b)]
         if all(x <= 0 for x in u):
             u = [-x for x in u]
+        if not all(x > 0 for x in u):
+            raise ArithmeticError("the level normal does not have positive coordinates")
         a = u[b - 1]
         c = 2 * u[0] + u[1]
         cert.levels.append(Level(k, theta, rho, psi, N, ct, u, a, c))

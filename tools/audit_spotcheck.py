@@ -59,15 +59,15 @@ for row in rows:
     f_bound = Fraction(maxu, 2 ** (l * (d - 1)))
     cond_Q = Q >= 8 * K and Q % (2**s) == 0 and 2**l <= Q - K
     stored = float(row["f_bound"])
-    sha = hashlib.sha256(str(maxu).encode()).hexdigest()[:16]
+    sha = hashlib.sha256(str(maxu).encode()).hexdigest()
     report(
         f"row ({b},{s}) Q={Q} l={l}: conts={conts}, hypotheses (Q>=8K, 2^s|Q, 2^l<=Q-K)",
         all(c == 1 for c in conts) and cond_Q,
         f"K={float(K):.2f}, {time.time()-t0:.1f}s",
     )
     report(
-        f"row ({b},{s}): f bound {float(f_bound):.6f} matches stored {stored:.6f} and sha(max u) {sha} == {row['sha256_max_u']}",
-        abs(float(f_bound) - stored) < 1e-12 and sha == row["sha256_max_u"],
+        f"row ({b},{s}): exact ratio <= stored upward bound {row['f_bound']}, full sha(max u) matches",
+        0 <= Fraction(row["f_bound"]) - f_bound < Fraction(1, 10**6) and sha == row["sha256_max_u"],
     )
     report(
         f"row ({b},{s}): max u <= Q^(d-1) Delta (1+10K/Q)",

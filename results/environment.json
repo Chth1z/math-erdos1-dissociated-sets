@@ -1,0 +1,8 @@
+{
+  "python": "3.14.5",
+  "integer_arithmetic": "Python arbitrary precision integers; fractions.Fraction",
+  "generator": "python experiments/make_certificates.py",
+  "verifier": "python tools/verify_certificates.py",
+  "sympy": "1.14.0",
+  "numpy": "2.4.6"
+}

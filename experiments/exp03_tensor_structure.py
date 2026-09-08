@@ -52,20 +52,25 @@ def part_b():
     # enumerate coefficient vectors m in [-M, M]^8 ; lattice vector = B^T m / den
     Mrange = 3
     rng = np.arange(-Mrange, Mrange + 1)
-    grids = np.array(list(itertools.product(rng, repeat=B.shape[0])), dtype=np.int64)
-    vecs = grids @ B                                  # numerators
-    inside = np.all(np.abs(vecs) < den, axis=1)       # |x_i| < 1  <=>  |num| < den
-    nonzero = np.any(grids != 0, axis=1)
-    bad = inside & nonzero
-    print(f"coefficient vectors tested: {len(grids)}; nonzero lattice vectors inside (-1,1)^9: {bad.sum()}")
-    # real-t condition for v: t v in Lambda + (-1,1)^d  =>  |t| < 1 ; test t = 1, 1.25, 1.5
     v = np.array(pair.v, dtype=np.int64)
-    for t_num in (4, 5, 6):                            # t = t_num/4
-        # need: no lattice vector lam with |t v - lam|_inf < 1 (in numerators: |t_num v - 4 lam| < 4)
-        target = t_num * v
-        diff = np.abs(vecs - target)                   # vecs already numerators with den 4
-        hit = np.all(diff < den, axis=1).sum()
-        print(f"  t={t_num/4}: lattice points with t*v in lam + (-1,1)^d: {hit}  (must be 0 for t>=1)")
+    vectors = itertools.product(rng, repeat=B.shape[0])
+    tested = bad = 0
+    hits = {t_num: 0 for t_num in (4,5,6)}
+    while chunk := list(itertools.islice(vectors, 100000)):
+        grids = np.array(chunk, dtype=np.int64)
+        vecs = grids @ B
+        tested += len(chunk)
+        bad += int(np.count_nonzero(np.all(np.abs(vecs) < den, axis=1) & np.any(grids != 0, axis=1)))
+        for t_num in hits:
+            # lambda=vecs/den, v_real=v/den, t=t_num/4.
+            diff = np.abs(4 * vecs - t_num * v)
+            hits[t_num] += int(np.count_nonzero(np.all(diff < 4 * den, axis=1)))
+    print(f"coefficient vectors tested: {tested}; nonzero lattice vectors inside (-1,1)^9: {bad}")
+    assert bad == 0
+    for t_num, hit in hits.items():
+        print(f"  t={t_num/4}: lattice points with t*v in lam + (-1,1)^d: {hit}")
+        assert hit == 0
+    print("This is a finite coefficient-box check at three t values, not a proof of A2 for every real t.")
 
 
 def poly_criterion(b, q):

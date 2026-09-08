@@ -8,7 +8,7 @@ Q=16: u=[48704, 49792, 53704, 52104, 62017], guaranteed (Q-K)=8.29, true thresho
 Q=24: u=[240336, 243936, 256764, 251436, 283489], guaranteed (Q-K)=16.29, true threshold Q'=24
 Q=40: u=[1816400, 1832800, 1890820, 1866420, 2009761], guaranteed (Q-K)=32.29, true threshold Q'=40
 
-== certificates for larger (b,s) ==
-(b,s)=(17,3) d=4913 l=37 n=181781: Q=137439055184 (tries=2) K=101691.3 Delta=0.29699 f(n) <= 0.298073  conts=[1, 1, 1]
-(b,s)=(13,4) d=28561 l=42 n=1199562: Q=4398047063424 (tries=1) K=552290.4 Delta=0.26412 f(n) <= 0.265069  conts=[1, 1, 1, 1]
-(b,s)=(17,4) d=83521 l=46 n=3841966: Q=70368746289408 (tries=3) K=2111663.3 Delta=0.20556 f(n) <= 0.206072  conts=[1, 1, 1, 1]
+== independent exact witness verification for larger (b,s) ==
+(b,s)=(17,3) d=4913 l=37 n=181781: Q=137439055184 (recorded tries=2) f(n) <= 0.298073 N/2^n <= 0.149037 conts=[1, 1, 1]
+(b,s)=(13,4) d=28561 l=42 n=1199562: Q=4398047063424 (recorded tries=1) f(n) <= 0.265070 N/2^n <= 0.132535 conts=[1, 1, 1, 1]
+(b,s)=(17,4) d=83521 l=46 n=3841966: Q=70368746289408 (recorded tries=3) f(n) <= 0.206073 N/2^n <= 0.103037 conts=[1, 1, 1, 1]

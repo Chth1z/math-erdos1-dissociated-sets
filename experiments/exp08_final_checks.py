@@ -1,14 +1,14 @@
 """Experiment 8: end-to-end brute-force confirmation for s=2, true dissociation threshold
 for small cases, and certificates for larger (b,s)."""
 import sys
-from fractions import Fraction
-from math import log2
+import json
+import importlib.util
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from dissociated import is_Q_dissociated, is_dissociated_big as is_dissociated, lift, f_ratio  # noqa: E402
-from tensor import K_bound, delta, tensor_certificate  # noqa: E402
+from tensor import K_bound, tensor_certificate  # noqa: E402
 
 sys.set_int_max_str_digits(0)
 
@@ -41,33 +41,26 @@ def true_threshold():
         if not cert.primitive:
             continue
         u = cert.full_u()
-        # largest Q' such that u is Q'-dissociated (brute force)
-        Qp = 2
-        while Qp <= 2 * Q and is_Q_dissociated(u, Qp):
-            Qp += 1
-        print(f"Q={Q}: u={u}, guaranteed (Q-K)={float(Q - K):.2f}, true threshold Q'={Qp - 1}")
+        # Monotonicity in the relation radius makes these two checks sufficient;
+        # do not repeat the whole enumeration for every smaller radius.
+        assert is_Q_dissociated(u, Q)
+        assert not is_Q_dissociated(u, Q + 1)
+        print(f"Q={Q}: u={u}, guaranteed (Q-K)={float(Q - K):.2f}, true threshold Q'={Q}")
 
 
 def big_certificates():
-    print("\n== certificates for larger (b,s) ==")
+    print("\n== independent exact witness verification for larger (b,s) ==")
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("independent_verifier", root / "tools/verify_certificates.py")
+    verifier = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(verifier)
+    rows = json.loads((root / "results/certificates.json").read_text(encoding="utf-8"))
     for (b, s) in ((17, 3), (13, 4), (17, 4)):
-        d = b ** s
-        K = K_bound(b, s)
-        Delta = delta(b, s)
-        l = int(log2(200 * (d - 1) * float(K))) + 1
-        Q0 = 2 ** (s + 1)
-        t = int((2 ** l + K) // Q0) + 1
-        tries = 0
-        while True:
-            tries += 1
-            cert = tensor_certificate(b, s, Q0 * t)
-            if cert.primitive:
-                break
-            t += 1
-        umax = cert.u_max()
-        f_exact = Fraction(umax, 2 ** (l * (d - 1)))
-        print(f"(b,s)=({b},{s}) d={d} l={l} n={l*d}: Q={Q0*t} (tries={tries}) K={float(K):.1f} "
-              f"Delta={float(Delta):.5f} f(n) <= {float(f_exact):.6f}  conts={[L.cont for L in cert.levels]}")
+        row = next(r for r in rows if (r["b"],r["s"]) == (b,s))
+        verifier.verify_row(row, root / "results")
+        print(f"(b,s)=({b},{s}) d={row['d']} l={row['l']} n={row['n']}: Q={row['Q']} "
+              f"(recorded tries={row['tries']}) f(n) <= {row['f_bound']} "
+              f"N/2^n <= {row['N_over_2^n']} conts={[L['cont'] for L in row['levels']]}")
 
 
 if __name__ == "__main__":
