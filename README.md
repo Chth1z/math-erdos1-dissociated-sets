@@ -1,6 +1,6 @@
 # Explicit dissociated sets from tensor lattices
 
-**Primitivity certificates and improved constructions**
+**Primitivity certificates and an effective decay rate**
 
 本项目研究 Erdős 子集和互异问题中的显式构造。论文给出保留张量结构的格扰动、精确饱和指标公式、局部原始性判据及可复核的数值构造，并证明无条件的有效定量衰减率。
 

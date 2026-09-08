@@ -1,0 +1,15 @@
+Explicit dissociated sets from tensor lattices: primitivity certificates and an effective decay rate
+
+Zhiyu Liu
+Tianjin Medical University General Hospital, Tianjin Medical University, Tianjin, China
+07eb1f@gmail.com
+
+Mathematics Subject Classifications: 11B75, 11H06, 11H31, 11Y16
+
+Abstract (plain text with LaTeX math only; no custom macros, for the OJS "HTML abstract" field):
+
+A finite set of positive integers is dissociated if its subset sums are pairwise distinct. We give explicit constructions from the tensor lattices underlying the recent disproof of Erdős's distinct subset sums conjecture by GPT-6 Astra, as expounded by Bloom. A prescribed perturbation of a lattice in dimension $d=b^s$ has a normal vector factoring into $s$ vectors of length $b$. We prove an exact formula for its saturation index in terms of the contents (the gcds of the coefficients) of $s$ circulant adjugates, and characterise primitivity by polynomial gcds over prime fields. Thus large constructions can be certified through small matrices.
+
+Exact integer computations give a dissociated set of size $n=43923$ with $\max A<0.158523\cdot 2^n$, and one of size $n=3841966$ with $\max A<0.103037\cdot 2^n$, improving Bohman's explicit constant $0.22002$. Each bound extends to every larger size by doubling and adjoining $1$.
+
+For every odd $b\ge 5$ with $3\nmid b$, we prove that the relevant first-level resultant is nonzero. The proof reduces a hypothetical common root to a nonzero algebraic integer all of whose conjugates have absolute value less than $1$. This nonvanishing controls every tensor depth: the scalings $Q=2^{s+1}t$ are primitive whenever $t$ is a sufficiently large multiple of a modulus depending only on $b$. Explicit bounds on this modulus give the unconditional rate $f(n)\le n^{-1/(50\log\log n)}$ for all sufficiently large $n$, where $f(n)$ is the infimum of $\max A/2^{n-1}$ over dissociated sets of size $n$.
